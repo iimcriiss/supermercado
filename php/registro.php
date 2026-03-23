@@ -1,16 +1,18 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "tienda");
+require_once 'db.php';
 
-if ($conn->connect_error) {
-    die("Error de conexión");
+$nombre = filter_var($_POST['nombre'], FILTER_SANITIZE_SPECIAL_CHARS);
+$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+$password_plano = $_POST['password'] ?? '';
+
+if (!$nombre || !$email || !$password_plain) {
+    die("Datos inválidos");
 }
 
-$nombre = htmlspecialchars($_POST['nombre']);
-$email = htmlspecialchars($_POST['email']);
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$password_hashed = password_hash($password_plano, PASSWORD_DEFAULT);
 
 $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $nombre, $email, $password);
+$stmt->bind_param("sss", $nombre, $email, $password_hashed);
 
 if ($stmt->execute()) {
     echo "Usuario registrado correctamente";
