@@ -12,6 +12,7 @@ foreach ($data as $producto) {
     $total += $producto['precio'] * $producto['cantidad'];
 }
 
+
 $stmt = $conn->prepare("INSERT INTO ventas (total) VALUES (?)");
 $stmt->bind_param("d", $total);
 $stmt->execute();
