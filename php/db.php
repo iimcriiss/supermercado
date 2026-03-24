@@ -4,12 +4,12 @@ $username = "root";
 $password = "";
 $dbname = "supermercado";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+try {
+    $pdo = new PDO ("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    echo "Conexion exitosa ✅";
+} catch(PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
-
-echo "Conexión exitosa";
-$conn->set_charset("utf8mb4");
 ?>
