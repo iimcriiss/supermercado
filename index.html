@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MercaBlue </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="images/icono_navegador.ico">
+</head>
+
+<body class="bg-gray-50">
+    <header>
+
+        <!-- Navbar con los elementos del logo, barra de buscar iniciar sesion y carrito-->
+        <nav class="bg-blue-500 text-white px-8 py-2 flex justify-between items-center shadow-lg">
+
+            <!-- Imagen del Logo-->
+            <a class="px-14 p-0" href="/index.html">
+                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-36 h-full transform scale-125 origin-left">
+            </a>
+
+            <!-- Contenedor donde irá el input de buscar -->
+            <div class="flex items-center bg-white rounded-full overflow-hidden w-[600px] shadow">
+                <!-- Menu desplegable de categorias-->
+                <select
+                    class="text-gray-500 text-sm px-3 py-2 bg-white border-r border-gray-200 outline-none cursor-pointer">
+                    <option>Categorías</option>
+                    <option>Frutas</option>
+                    <option>Verduras</option>
+                    <option>Lácteos</option>
+                    <option>Bebidas</option>
+                </select>
+
+                <!-- Input -->
+                <input type="text" placeholder="Busca tu producto aqui"
+                    class="flex-1 text-gray-600 text-sm px-4 py-2 outline-none">
+                <!-- Boton de buscar -->
+                <button class="bg-blue-600 px-4 py-2 hover:bg-blue-800 transition"> Buscar </button>
+            </div>
+
+            <!-- El icono user SVG de "user" y sus contenedores "divs"-->
+            <div class="flex items-center gap-10 pr-20"> 
+                <a href="#" class="flex items-center gap-3 hover:text-blue-200 transition group">
+                    <div class="p-2 bg-blue-600 rounded-full group-hover:bg-blue-700 shadow-sm">
+                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-m font-semibold"> Iniciar Sesion </span>
+                    </div>
+                </a>
+
+                <!-- El icono user SVG de "carrito" -->
+                <a href="#" class="flex items-center gap-3 hover:text-blue-200 transition group relative">
+                    <div class="relative">
+                        <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
+                        </svg>
+                        <span
+                            class="absolute -top-1 -right-2 bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-blue-500">
+                            0
+                        </span>
+                    </div>
+                    <span class="text-m font-semibold self-center">Carrito</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+
+    <main> 
+        <div> 
+            
+        </div>
+    </main>
+
+
+
+
+
+    <footer> 
+
+    </footer>
+
+</body>
+
+</html>
