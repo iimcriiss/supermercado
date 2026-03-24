@@ -154,3 +154,30 @@ function validarFormulario() {
     alert("Registro exitoso");
     return true;
 }
+
+    let slideActual = 0;
+    const totalSlides = 3;
+
+    function actualizarSlider() {
+        const slider = document.getElementById('slider');
+        slider.style.transform = `translateX(-${slideActual * 100}%)`;
+
+        // Actualizar puntos
+        for (let i = 0; i < totalSlides; i++) {
+            const punto = document.getElementById(`punto-${i}`);
+            punto.classList.toggle('opacity-50', i !== slideActual);
+        }
+    }
+
+    function cambiarSlide(direccion) {
+        slideActual = (slideActual + direccion + totalSlides) % totalSlides;
+        actualizarSlider();
+    }
+
+    function irASlide(indice) {
+        slideActual = indice;
+        actualizarSlider();
+    }
+
+    // Avanza automáticamente cada 4 segundos
+    setInterval(() => cambiarSlide(1), 4000);
