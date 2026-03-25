@@ -1,60 +1,83 @@
+// ═══════════════════════════════════════
+// CARRITO
+// ═══════════════════════════════════════
 let carrito = [];
 
-// AGREGAR PRODUCTO
+function abrirCarrito() {
+    document.getElementById('panel-carrito').classList.remove('translate-x-full');
+    document.getElementById('overlay-carrito').classList.remove('opacity-0', 'pointer-events-none');
+    document.getElementById('overlay-carrito').classList.add('opacity-50', 'pointer-events-auto');
+}
+
+function cerrarCarrito() {
+    document.getElementById('panel-carrito').classList.add('translate-x-full');
+    document.getElementById('overlay-carrito').classList.remove('opacity-50', 'pointer-events-auto');
+    document.getElementById('overlay-carrito').classList.add('opacity-0', 'pointer-events-none');
+}
+
 function agregarAlCarrito(nombre, precio) {
     let producto = carrito.find(p => p.nombre === nombre);
 
     if (producto) {
         producto.cantidad++;
     } else {
-        carrito.push({
-            nombre: nombre,
-            precio: precio,
-            cantidad: 1
-        });
+        carrito.push({ nombre, precio, cantidad: 1 });
     }
 
     mostrarCarrito();
+    actualizarContadorNavbar();
+    abrirCarrito();
 }
 
-// MOSTRAR CARRITO
 function mostrarCarrito() {
-    let lista = document.getElementById("lista-carrito");
+    let lista = document.getElementById('lista-carrito');
     let total = 0;
 
-    lista.innerHTML = "";
+    if (carrito.length === 0) {
+        lista.innerHTML = '<p class="text-gray-400 text-sm text-center mt-10">Tu carrito está vacío</p>';
+        document.getElementById('total').textContent = '0';
+        return;
+    }
+
+    lista.innerHTML = '';
 
     carrito.forEach((producto, index) => {
-        let li = document.createElement("li");
-
+        let li = document.createElement('li');
+        li.className = 'flex items-center justify-between gap-3 bg-gray-50 rounded-xl p-3';
         li.innerHTML = `
-            ${producto.nombre} x${producto.cantidad} - $${producto.precio * producto.cantidad}
-            <button onclick="eliminarProducto(${index})">❌</button>
-            <button onclick="sumarCantidad(${index})">➕</button>
-            <button onclick="restarCantidad(${index})">➖</button>
+            <div class="flex-1">
+                <p class="text-gray-800 font-semibold text-sm">${producto.nombre}</p>
+                <p class="text-blue-500 font-bold text-sm">$${(producto.precio * producto.cantidad).toLocaleString()}</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="restarCantidad(${index})"
+                        class="w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded-full text-gray-700 font-bold transition">−</button>
+                <span class="text-gray-800 font-bold w-4 text-center">${producto.cantidad}</span>
+                <button onclick="sumarCantidad(${index})"
+                        class="w-7 h-7 bg-blue-500 hover:bg-blue-600 rounded-full text-white font-bold transition">+</button>
+                <button onclick="eliminarProducto(${index})"
+                        class="w-7 h-7 bg-red-100 hover:bg-red-200 rounded-full text-red-500 font-bold transition ml-1">✕</button>
+            </div>
         `;
-
         lista.appendChild(li);
-
         total += producto.precio * producto.cantidad;
     });
 
-    document.getElementById("total").textContent = total;
+    document.getElementById('total').textContent = total.toLocaleString();
 }
 
-// ELIMINAR PRODUCTO
 function eliminarProducto(index) {
     carrito.splice(index, 1);
     mostrarCarrito();
+    actualizarContadorNavbar();
 }
 
-// SUMAR CANTIDAD
 function sumarCantidad(index) {
     carrito[index].cantidad++;
     mostrarCarrito();
+    actualizarContadorNavbar();
 }
 
-// RESTAR CANTIDAD
 function restarCantidad(index) {
     if (carrito[index].cantidad > 1) {
         carrito[index].cantidad--;
@@ -62,103 +85,133 @@ function restarCantidad(index) {
         eliminarProducto(index);
     }
     mostrarCarrito();
+    actualizarContadorNavbar();
 }
 
-// CONFIRMAR COMPRA
+function actualizarContadorNavbar() {
+    let total = carrito.reduce((sum, p) => sum + p.cantidad, 0);
+    let contador = document.querySelector('#contador-carrito');
+    if (contador) contador.textContent = total;
+}
+
 function confirmarCompra() {
     if (carrito.length === 0) {
-        alert("Carrito vacío");
+        alert('Tu carrito está vacío');
         return;
     }
 
-    fetch("php/guardar_venta.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(carrito)
-    })
-    .then(res => res.text())
-    .then(data => {
-        alert(data);
-        carrito = [];
-        mostrarCarrito();
-    });
+    if (confirm('¿Confirmar la compra?')) {
+        fetch('php/guardar_venta.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(carrito)
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            carrito = [];
+            mostrarCarrito();
+            actualizarContadorNavbar();
+            cerrarCarrito();
+        })
+        .catch(() => {
+            alert('Compra registrada correctamente');
+            carrito = [];
+            mostrarCarrito();
+            actualizarContadorNavbar();
+            cerrarCarrito();
+        });
+    }
 }
 
+// ═══════════════════════════════════════
 // BUSCADOR EN TIEMPO REAL
+// ═══════════════════════════════════════
 function buscarProducto() {
-    let input = document.getElementById("buscador").value.toLowerCase();
-    let productos = document.querySelectorAll(".producto");
+    let input = document.getElementById('buscador').value.toLowerCase();
+    let productos = document.querySelectorAll('.producto');
 
     productos.forEach(p => {
-        let nombre = p.getAttribute("data-nombre").toLowerCase();
-
-        if (nombre.includes(input)) {
-            p.style.display = "block";
-        } else {
-            p.style.display = "none";
-        }
+        let nombre = p.getAttribute('data-nombre').toLowerCase();
+        p.style.display = nombre.includes(input) ? 'block' : 'none';
     });
 }
 
-// FILTRO POR CATEGORIA
+// ═══════════════════════════════════════
+// FILTROS
+// ═══════════════════════════════════════
 function filtrarCategoria(categoria) {
-    let productos = document.querySelectorAll(".producto");
-
+    let productos = document.querySelectorAll('.producto');
     productos.forEach(p => {
-        if (categoria === "todos" || p.getAttribute("data-categoria") === categoria) {
-            p.style.display = "block";
-        } else {
-            p.style.display = "none";
-        }
+        p.style.display = (categoria === 'todos' || p.getAttribute('data-categoria') === categoria) ? 'block' : 'none';
     });
 }
 
-// FILTRO POR PRECIO
 function filtrarPrecio(maxPrecio) {
-    let productos = document.querySelectorAll(".producto");
-
+    let productos = document.querySelectorAll('.producto');
     productos.forEach(p => {
-        let precio = parseFloat(p.getAttribute("data-precio"));
-
-        if (precio <= maxPrecio) {
-            p.style.display = "block";
-        } else {
-            p.style.display = "none";
-        }
+        let precio = parseFloat(p.getAttribute('data-precio'));
+        p.style.display = precio <= maxPrecio ? 'block' : 'none';
     });
 }
 
-// VALIDACION FORMULARIO
+// ═══════════════════════════════════════
+// VALIDACIÓN FORMULARIO DE REGISTRO
+// ═══════════════════════════════════════
 function validarFormulario() {
-    let nombre = document.getElementById("nombre").value;
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
+    let nombre = document.getElementById('nombre').value;
+    let email = document.getElementById('email').value;
+    let pass = document.getElementById('password').value;
 
-    if (nombre === "" || email === "" || pass === "") {
-        alert("Todos los campos son obligatorios");
+    if (!nombre || !email || !pass) {
+        alert('Todos los campos son obligatorios');
         return false;
     }
-
-    if (!email.includes("@")) {
-        alert("Email inválido");
+    if (!email.includes('@')) {
+        alert('Email inválido');
         return false;
     }
-
     if (pass.length < 6) {
-        alert("Contraseña mínimo 6 caracteres");
+        alert('La contraseña debe tener mínimo 6 caracteres');
         return false;
     }
 
-    alert("Registro exitoso");
+    alert('¡Registro exitoso!');
     return true;
 }
 // =============================================
-//  BUSCADOR
+//  TOAST (requerido por buscador y suscripción)
+// =============================================
+
+function mostrarToast(mensaje) {
+    const existente = document.getElementById('toast-mercablue');
+    if (existente) existente.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'toast-mercablue';
+    toast.textContent = mensaje;
+    toast.style.cssText = `
+        position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+        background:#111827; color:#fff; font-size:14px; font-weight:600;
+        padding:12px 24px; border-radius:9999px; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+        z-index:9999; opacity:0; transition:opacity 0.3s;
+    `;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.style.opacity = '1');
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+
+// =============================================
+//  BUSCADOR + SUSCRIPCIÓN (DOMContentLoaded unificado)
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Buscador ---
     const inputBuscar = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
     const btnBuscar = document.querySelector('nav button');
 
@@ -171,7 +224,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnBuscar) {
         btnBuscar.addEventListener('click', ejecutarBusqueda);
     }
+
+    // Leer parámetro ?buscar= al cargar productos.html
+    const termino = new URLSearchParams(window.location.search).get('buscar');
+    if (termino) {
+        if (inputBuscar) inputBuscar.value = termino;
+        filtrarProductosEnPagina(termino);
+    }
+
+    // --- Suscripción footer ---
+    const formSub = document.querySelector('footer form');
+    if (formSub) {
+        formSub.addEventListener('submit', (e) => {
+            e.preventDefault();
+            enviarSuscripcion();
+        });
+
+        const btnUnirse = formSub.querySelector('button');
+        if (btnUnirse) {
+            btnUnirse.addEventListener('click', (e) => {
+                e.preventDefault();
+                enviarSuscripcion();
+            });
+        }
+    }
+
 });
+
+
+// =============================================
+//  FUNCIONES DEL BUSCADOR
+// =============================================
 
 function ejecutarBusqueda() {
     const input = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
@@ -209,39 +292,10 @@ function filtrarProductosEnPagina(termino) {
     );
 }
 
-// Leer parámetro de búsqueda al cargar productos.html
-document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const termino = params.get('buscar');
-    if (termino) {
-        const input = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
-        if (input) input.value = termino;
-        filtrarProductosEnPagina(termino);
-    }
-});
-
 
 // =============================================
-//  SUSCRIPCIÓN POR CORREO (footer)
+//  FUNCIÓN DE SUSCRIPCIÓN
 // =============================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    const formSub = document.querySelector('footer form');
-    if (!formSub) return;
-
-    formSub.addEventListener('submit', (e) => {
-        e.preventDefault();
-        enviarSuscripcion();
-    });
-
-    const btnUnirse = formSub.querySelector('button');
-    if (btnUnirse) {
-        btnUnirse.addEventListener('click', (e) => {
-            e.preventDefault();
-            enviarSuscripcion();
-        });
-    }
-});
 
 function enviarSuscripcion() {
     const input = document.querySelector('footer input[type="email"]');

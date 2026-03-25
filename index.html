@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MercaBlue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="images/icono_navegador.ico" />
+</head>
+
+<body class="bg-gray-50">
+    <header class="sticky top-0 z-50 shadow-md">
+
+        <!-- Navbar principal-->
+        <nav class="bg-blue-500 text-white px-12 py-3 flex justify-between items-center">
+
+            <!-- Logo -->
+            <a class="px-14 p-0" href="/index.html">
+                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-40 h-full transform scale-125 origin-left">
+            </a>
+
+            <!-- Buscador central -->
+            <div class="flex items-center bg-white rounded-full overflow-hidden w-[560px] shadow-md">
+                <select
+                    class="text-gray-500 text-sm px-4 py-2.5 bg-white border-r border-gray-200 outline-none cursor-pointer">
+                    <option>Categorías</option>
+                    <option>Frutas</option>
+                    <option>Verduras</option>
+                    <option>Lácteos</option>
+                    <option>Bebidas</option>
+                    <option>Carnes</option>
+                    <option>Panadería</option>
+                </select>
+                <input type="text" placeholder="Busca tu producto aquí..."
+                    class="flex-1 text-gray-600 text-sm px-4 py-2.5 outline-none">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
+                    Buscar
+                </button>
+            </div>
+
+            <!-- Acciones: usuario + carrito -->
+            <div class="flex items-center gap-8">
+
+                <!-- Ventas (Solo admin)-->
+                <a id="btn-ventas" href="#" class="hidden flex items-center gap-2 hover:text-blue-200 transition">
+                    <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+                        <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="1.5">
+                            <path
+                                d="M14 9.846c-1-.923-3.667-1.23-3.667.616S14 11.385 14 13.23s-3 1.846-4 .615m2 .857V16m0-6.887V8M2 8l9.732-4.866a.6.6 0 0 1 .536 0L22 8" />
+                            <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
+                        </g>
+                    </svg>
+                    <span class="text-sm font-semibold"> Ventas </span>
+                </a>
+
+
+                <!-- Iniciar sesión -->
+                <a onclick="abrirLogin()" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-sm font-semibold">Iniciar Sesión</span>
+                </a>
+
+                <!-- Carrito -->
+                <a onclick="abrirCarrito()" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                    <div class="relative">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span id="contador-carrito"
+                            class="absolute -top-1 -right-2 bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-blue-500">
+                            0
+                        </span>
+                    </div>
+                    <span class="text-sm font-semibold">Carrito</span>
+                </a>
+
+            </div>
+        </nav>
+
+
+    </header>
+    <main>
+        <!-- HERO -->
+        <section class="relative min-h-[500px] flex items-center overflow-hidden">
+            <!-- Imagen de fondo -->
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1600" alt="Supermercado"
+                class="absolute inset-0 w-full h-full object-cover" />
+
+            <!-- Capa oscura encima de la imagen para que el texto se lea bien -->
+            <div class="absolute inset-0 bg-blue-900 opacity-60"></div>
+
+            <!-- Contenido del Hero -->
+            <div class="relative z-10 px-20 max-w-xl">
+                <h1 class="text-5xl font-extrabold text-white leading-tight mb-4">
+                    Todo lo que necesitas,<br />
+                    <span class="text-blue-300">en un solo lugar</span>
+                </h1>
+                <p class="text-gray-200 text-lg mb-8">
+                    En MercaBlue encontrarás los mejores productos frescos, ofertas del
+                    día y la mejor experiencia de compra para ti y tu familia.
+                </p>
+                <a href="productos.html"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-full transition shadow-lg">
+                    Ver productos
+                </a>
+            </div>
+        </section>
+
+        <!-- PRODUCTOS DESTACADOS -->
+<section class="py-16 px-20 bg-blue-50">
+    <!-- Título de la sección -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Productos Destacados</h2>
+            <p class="text-gray-500 mt-1">Los favoritos de nuestros clientes</p>
+        </div>
+        <a href="productos.html" class="text-blue-500 hover:text-blue-700 font-medium transition">
+            Ver todos →
+        </a>
+    </div>
+    
+    <!-- Grid de tarjetas -->
+    <div class="grid grid-cols-4 gap-6">
+    
+        <!-- Tarjeta 1 -->
+        <a href="#"
+            class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+            <img src="images/productos/frutas/manzanas/manzanas.png" alt="Manzanas" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="text-xs text-blue-500 font-semibold uppercase">Frutas</span>
+                <h3 class="text-gray-800 font-bold text-lg mt-1">Manzanas Rojas</h3>
+                <p class="text-gray-400 text-sm mb-3">Por kilo — Frescas del día</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-blue-600 font-bold text-xl">$3.500</span>
+                    <button onclick="agregarAlCarrito('Manzanas Rojas', 3500)"
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
+                        + Agregar
+                    </button>
+                </div>
+            </div>
+        </a>
+    
+        <!-- Tarjeta 2 -->
+        <a href="#"
+            class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+            <img src="images/productos/bebidas/lacteos/leche/leche.png" alt="Leche" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="text-xs text-blue-500 font-semibold uppercase">Lácteos</span>
+                <h3 class="text-gray-800 font-bold text-lg mt-1">Leche Entera</h3>
+                <p class="text-gray-400 text-sm mb-3">1 litro — Marca Premium</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-blue-600 font-bold text-xl">$2.800</span>
+                    <button onclick="agregarAlCarrito('Leche Entera', 2800)"
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
+                        + Agregar
+                    </button>
+                </div>
+            </div>
+        </a>
+    
+        <!-- Tarjeta 3 -->
+        <a href="#"
+            class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+            <img src="images/productos/verduras/espinaca/espinaca.png" alt="Verduras" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="text-xs text-blue-500 font-semibold uppercase">Verduras</span>
+                <h3 class="text-gray-800 font-bold text-lg mt-1">Espinaca Fresca</h3>
+                <p class="text-gray-400 text-sm mb-3">Bolsa 500g — Orgánica</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-blue-600 font-bold text-xl">$1.900</span>
+                    <button onclick="agregarAlCarrito('Espinaca Fresca', 1900)"
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
+                        + Agregar
+                    </button>
+                </div>
+            </div>
+        </a>
+    
+        <!-- Tarjeta 4 -->
+        <a href="#"
+            class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+            <img src="images/productos/bebidas/jugos/jugo.png" alt="Bebidas" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="text-xs text-blue-500 font-semibold uppercase">Bebidas</span>
+                <h3 class="text-gray-800 font-bold text-lg mt-1">Jugo Natural</h3>
+                <p class="text-gray-400 text-sm mb-3">1 litro — Sin azúcar</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-blue-600 font-bold text-xl">$4.200</span>
+                    <button onclick="agregarAlCarrito('Jugo Natural', 4200)"
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
+                        + Agregar
+                    </button>
+                </div>
+            </div>
+        </a>
+    
+    </div>
+    </section>
+
+        <!-- Relleno-->
+        <section class="py-12 px-20 bg-blue-500 text-white">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="p-3 bg-blue-700 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold">Entrega Rápida y Confiable</h3>
+                    <p class="text-white text-sm leading-relaxed max-w-xs font-semibold">
+                        Recibe tu mercado en 24/48h en la puerta de tu casa.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="p-3 bg-blue-700 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold">Calidad y Frescura Garantizada</h3>
+                    <p class="text-white text-sm leading-relaxed max-w-xs font-semibold">
+                        Seleccionamos los mejores productos para ti y tu familia.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="p-3 bg-blue-700 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <path d="m9 12 2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold">Pago 100% Seguro</h3>
+                    <p class="text-white text-sm leading-relaxed max-w-xs font-semibold">
+                        Múltiples métodos de pago para tu comodidad y seguridad.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDER DE OFERTAS -->
+        <section class="py-16 px-20 bg-blue-50">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Ofertas Especiales</h2>
+                <p class="text-gray-500 mt-1">Solo por hoy — ¡No te las pierdas!</p>
+            </div>
+
+            <!-- Contenedor del slider -->
+            <div class="relative overflow-hidden rounded-2xl">
+                <!-- Slides -->
+                <div id="slider" class="flex transition-transform duration-500 ease-in-out">
+                    <!-- Slide 1 -->
+                    <div class="min-w-full relative">
+                        <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1400"
+                            alt="Oferta frutas" class="w-full h-72 object-cover brightness-50" />
+                        <div class="absolute inset-0 flex items-center px-16">
+                            <div>
+                                <span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">🔥 50%
+                                    OFF</span>
+                                <h3 class="text-white text-4xl font-extrabold mt-3">
+                                    Frutas Frescas
+                                </h3>
+                                <p class="text-gray-300 mt-2 text-lg">
+                                    Toda la sección de frutas con descuento hoy
+                                </p>
+                                <a href="productos.html"
+                                    class="mt-5 inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-semibold transition">
+                                    Ver oferta
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="min-w-full relative">
+                        <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=1400" alt="Oferta lácteos"
+                            class="w-full h-72 object-cover brightness-50" />
+                        <div class="absolute inset-0 flex items-center px-16">
+                            <div>
+                                <span class="bg-yellow-400 text-gray-900 text-sm font-bold px-3 py-1 rounded-full">⭐
+                                    2x1</span>
+                                <h3 class="text-white text-4xl font-extrabold mt-3">
+                                    Lácteos Premium
+                                </h3>
+                                <p class="text-gray-300 mt-2 text-lg">
+                                    Lleva dos y paga uno en productos seleccionados
+                                </p>
+                                <a href="productos.html"
+                                    class="mt-5 inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-semibold transition">
+                                    Ver oferta
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="min-w-full relative">
+                        <img src="https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=1400"
+                            alt="Oferta bebidas" class="w-full h-72 object-cover brightness-50" />
+                        <div class="absolute inset-0 flex items-center px-16">
+                            <div>
+                                <span class="bg-green-500 text-white text-sm font-bold px-3 py-1 rounded-full">💚 30%
+                                    OFF</span>
+                                <h3 class="text-white text-4xl font-extrabold mt-3">
+                                    Bebidas Naturales
+                                </h3>
+                                <p class="text-gray-300 mt-2 text-lg">
+                                    Jugos y bebidas saludables con descuento especial
+                                </p>
+                                <a href="productos.html"
+                                    class="mt-5 inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-semibold transition">
+                                    Ver oferta
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón izquierda -->
+                <button onclick="cambiarSlide(-1)"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow transition">
+                    < </button>
+
+                        <!-- Botón derecha -->
+                        <button onclick="cambiarSlide(1)"
+                            class="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow transition">
+                            >
+                        </button>
+
+                        <!-- Puntos indicadores -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                            <span id="punto-0" class="w-3 h-3 rounded-full bg-white cursor-pointer"
+                                onclick="irASlide(0)"></span>
+                            <span id="punto-1" class="w-3 h-3 rounded-full bg-white opacity-50 cursor-pointer"
+                                onclick="irASlide(1)"></span>
+                            <span id="punto-2" class="w-3 h-3 rounded-full bg-white opacity-50 cursor-pointer"
+                                onclick="irASlide(2)"></span>
+                        </div>
+            </div>
+        </section>
+        <!-- CATEGORÍAS -->
+        <section class="py-16 px-20 bg-white">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-gray-800">
+                    Comprar por Categoría
+                </h2>
+                <p class="text-gray-500 mt-1">Encuentra lo que buscas más rápido</p>
+            </div>
+
+            <div class="grid grid-cols-6 gap-6">
+                <!-- Frutas -->
+                <a href="productos.html"
+                    class="flex flex-col items-center gap-3 p-6 bg-orange-50 rounded-2xl hover:bg-orange-100 hover:shadow-md transition group">
+                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="#f4d171"><g fill="none" stroke="#f4d171" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M12.831 6.333a2 2 0 0 1-1.663 0C6.1 4.018 2.5 6.608 2.5 13.25a9.76 9.76 0 0 0 9.5 10a9.76 9.76 0 0 0 9.5-10a10.35 10.35 0 0 0-1.286-5.535m-4.79-1.639c.186.185.434.305.73.352c.295.048.634.021.995-.077a4.3 4.3 0 0 0 1.11-.497c.37-.229.729-.514 1.054-.839s.61-.683.84-1.055s.397-.748.496-1.11c.098-.36.125-.699.078-.994a1.3 1.3 0 0 0-.353-.73a1.3 1.3 0 0 0-.73-.353a2.4 2.4 0 0 0-.995.078a4.3 4.3 0 0 0-1.11.496c-.371.23-.73.515-1.054.84s-.61.683-.84 1.054c-.23.372-.398.749-.496 1.11c-.099.36-.125.7-.078.995s.167.544.353.73M12 6.514V2.25"/><path d="M12 6.514a8.72 8.72 0 0 0-3.5 7.236a14.03 14.03 0 0 0 3.5 9.5"/></g>
+                    </svg>
+                    <span
+                        class="text-gray-700 font-semibold text-sm group-hover:text-orange-500 transition">Frutas</span>
+                </a>
+
+                <!-- Verduras -->
+                <a href="productos.html"
+                    class="flex flex-col items-center gap-3 p-6 bg-green-50 rounded-2xl hover:bg-green-100 hover:shadow-md transition group">
+                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 48 48" fill="#5be685"><g fill="#5be685" fill-rule="evenodd" clip-rule="evenodd"><path d="M22.965 9.163c-1.16-1.104-2.826-1.653-4.998-1.12a5.14 5.14 0 0 0-2.077-1.666c-1.336-.574-3.013-.562-4.904.525c-1.978.923-2.931 2.28-3.194 3.704c-.178.968-.023 1.886.232 2.61c-1.678 1.468-2.183 3.144-1.942 4.723c.209 1.366.955 2.533 1.687 3.325a4.1 4.1 0 0 0-.038 1.678c.31-.22.457-.322.794-.459c.55-.224 1-.25 1.5-.25c1.575 0 2.486.183 3.988.6a10 10 0 0 1 2.431 1.008l.284-.122a2 2 0 0 1 1.135-.136l3.513.607a14 14 0 0 1-.233-2.197a9.48 9.48 0 0 1 5.022-8.572a4.1 4.1 0 0 0-1.438-.972c-.23-1.053-.761-2.333-1.762-3.286m-9.826 1.117a1 1 0 0 1 1.34.453l.791 1.6l1.613-1.727a1 1 0 0 1 1.462 1.363l-2.127 2.278l.803 1.621l1.331-1.21a1 1 0 0 1 1.346 1.478l-1.755 1.595l1.056 2.134a1 1 0 0 1-1.793.886l-1.095-2.213l-1.964.397a1 1 0 0 1-.397-1.958l1.444-.292l-.796-1.607l-3.039.457a1 1 0 1 1-.298-1.976l2.406-.362l-.781-1.579a1 1 0 0 1 .453-1.338"/><path d="m24.136 24.695l-.508-.099a8 8 0 0 1-.394-1.523l-.015-.06c-.102-.417-.17-.784-.176-1.06a7.6 7.6 0 0 1 2.423-5.72q.092-.087.187-.151c2.015-1.8 4.833-2.113 7.015-.327c-.025-2.452.97-4.848 3.38-6.238l.845 1.462c-2.041 1.177-2.8 3.38-2.462 5.735c4.655-1.53 8.278 2.873 6.918 7.942a7.85 7.85 0 0 1-2.547 3.977l-.61-.213c-1.807-.627-4.082-1.386-5.9-1.887c-1.768-.488-4.043-.993-5.863-1.373a196 196 0 0 0-2.293-.465m13.418-4.709a1 1 0 0 1 1.172.79a5.06 5.06 0 0 1-1.803 4.95a.998.998 0 1 1-1.26-1.552a3.07 3.07 0 0 0 1.1-3.017a1 1 0 0 1 .79-1.17M10.236 41.998c3-.167 4.856-1.02 6-2.269c.455.61 1.218.964 2.044.834a119 119 0 0 0 3.098-.531v-4.685h2.23v4.254c2.82-.57 6.25-1.353 10.031-2.406v-2.961h2.23v2.32c1.523-.453 3.092-.948 4.691-1.488a2.034 2.034 0 0 0 0-3.891a137 137 0 0 0-11.38-3.293v6.352h-2.229v-6.877c-3.69-.838-6.71-1.37-8.671-1.68a2.12 2.12 0 0 0-2.044.835c-1.144-1.25-3-2.103-6-2.27a1.063 1.063 0 0 0-1.113 1.085c.026 1.813.137 3.253.515 4.376c-1.225.464-2.38 1.4-3.436 2.809c-.27.36-.27.857 0 1.217c1.047 1.397 2.193 2.33 3.406 2.797c-.322 1.09-.45 2.52-.483 4.384a1.063 1.063 0 0 0 1.11 1.088m2.199-10.972l-2.007.76c-.556.21-1.18.621-1.84 1.334c.653.706 1.271 1.116 1.822 1.328l1.918.739l-.582 1.969c-.171.58-.286 1.374-.347 2.488c2.15-.33 3.058-1.127 3.527-1.852c.675-1.043.878-2.565.878-4.672s-.203-3.628-.878-4.671c-.47-.726-1.38-1.523-3.533-1.854c.057 1.08.17 1.838.358 2.399z"/></g>
+                    </svg>
+                    <span
+                        class="text-gray-700 font-semibold text-sm group-hover:text-green-500 transition">Verduras</span>
+                </a>
+
+                <!-- Lácteos -->
+                <a href="productos.html"
+                    class="flex flex-col items-center gap-3 p-6 bg-yellow-50 rounded-2xl hover:bg-yellow-100 hover:shadow-md transition group">
+                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14" fill="#ecee8c"><g fill="none" stroke="#ecee8c" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09.77L9 .75L.75 5.61A.47.47 0 0 0 .5 6v6.71a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-7A5.88 5.88 0 0 0 9.09.77ZM.59 5.75H13"/><path d="M.5 10.42h0l.08-.07A2 2 0 0 1 2 9.75a2 2 0 0 1 2 2a2 2 0 0 1-.59 1.41l-.08.09"/><circle cx="9" cy="9.25" r="1.5"/></g>
+                    </svg>
+                    <span
+                        class="text-gray-700 font-semibold text-sm group-hover:text-yellow-500 transition">Lácteos</span>
+                </a>
+
+                <!-- Bebidas -->
+                <a href="productos.html"
+                    class="flex flex-col items-center gap-3 p-6 bg-blue-50 rounded-2xl hover:bg-blue-100 hover:shadow-md transition group">
+                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14" fill="#94eaff"><g fill="none" stroke="#94eaff" stroke-linecap="round" stroke-linejoin="round"><path d="m11.5 6l-.89 6.62a1 1 0 0 1-1 .88H4.38a1 1 0 0 1-1-.88L2.5 6m8.23-2.32a1 1 0 0 0-1-.68H4.22a1 1 0 0 0-.95.68L2.5 6h9Z"/><path d="M8.5 3V1.5a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1V3"/></g>
+                    </svg>
+                    <span
+                        class="text-gray-700 font-semibold text-sm group-hover:text-blue-500 transition">Bebidas</span>
+                </a>
+
+                <!-- Carnes -->
+                <a href="productos.html"
+                    class="flex flex-col items-center gap-3 p-6 bg-red-50 rounded-2xl hover:bg-red-100 hover:shadow-md transition group">
+                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="#ff9494"><g fill="none" stroke="#ff9494" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m13.62 8.382l1.966-1.967A2 2 0 1 1 19 5a2 2 0 1 1-1.413 3.414l-1.82 1.821m-9.863 8.361c2.733 2.734 5.9 4 7.07 2.829c1.172-1.172-.094-4.338-2.828-7.071c-2.733-2.734-5.9-4-7.07-2.829c-1.172 1.172.094 4.338 2.828 7.071zM7.5 16l1 1"/><path d="M12.975 21.425c3.905-3.906 4.855-9.288 2.121-12.021c-2.733-2.734-8.115-1.784-12.02 2.121"/></g>
+                    </svg>
+                    <span class="text-gray-700 font-semibold text-sm group-hover:text-red-500 transition">Carnes</span>
+                </a>
+
+                <!-- Panadería -->
+                <a href="productos.html"
+                    class="flex flex-col items-center gap-3 p-6 bg-amber-50 rounded-2xl hover:bg-amber-100 hover:shadow-md transition group">
+                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 32 32" fill="#f5f170"><g fill="#f5f170"><path d="M7.5 14a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-2 1a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1ZM8 16.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM5.5 18a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm4.5-2.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0Zm1.5-.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm2.5 2.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM11.5 19a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-1.5.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM7.5 21a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-1.5.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM9.5 24a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm2.5-1.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0Zm1.5-.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm.5 2.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0Z"/><path d="m27.716 26.542l-11.42 4.23a2.971 2.971 0 0 1-2.393.086l-9.366-3.68A4 4 0 0 1 2 23.455v-9.652l-.16-.24A5 5 0 0 1 1 10.788V9.386c0-1.402.938-2.516 2.146-2.878l11.091-4.182a5 5 0 0 1 3.526 0l9.35 3.52A6 6 0 0 1 31 11.46v.904c0 .998-.37 1.931-1 2.646v8.25a3.5 3.5 0 0 1-2.284 3.282ZM14.943 4.197L6.848 7.25l8.245 3.092a6.021 6.021 0 0 1 3.76 6.958l8.801-3.046A2 2 0 0 0 29 12.364v-.904a4 4 0 0 0-2.59-3.743l-9.352-3.52a3 3 0 0 0-2.115 0ZM18 28.007l9.021-3.34A1.5 1.5 0 0 0 28 23.26v-7.01l-10 3.462v8.296Zm-2.808 1.04l.298-.11a.995.995 0 0 0 .51-.872V19a1 1 0 0 1 .168-.555l.157-.235a4.02 4.02 0 0 0-1.934-5.995L4.35 8.45a.99.99 0 0 0-.593-.035l-.203.077V8.49A.996.996 0 0 0 3 9.386v1.403a3 3 0 0 0 .504 1.664l.328.492A1 1 0 0 1 4 13.5v9.955a2 2 0 0 0 1.269 1.862l9.365 3.68c.188.073.38.086.558.05Z"/></g>
+                    </svg>
+                    <span
+                        class="text-gray-700 font-semibold text-sm group-hover:text-amber-500 transition">Panadería</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8 px-20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div class="space-y-4">
+                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-46 brightness-0 invert" />
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Llevamos la frescura del campo directamente a tu mesa. Calidad
+                    garantizada en cada producto y entrega rápida en la puerta de tu
+                    hogar.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="bg-gray-800 p-2 rounded-full hover:bg-blue-500 transition shadow-sm">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="bg-gray-800 p-2 rounded-full hover:bg-pink-500 transition shadow-sm">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
+                    Compañía
+                </h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Sobre nosotros</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Nuestras tiendas</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Trabaja con nosotros</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Blog de cocina</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
+                    Soporte
+                </h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Centro de ayuda</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Políticas de envío</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Términos y condiciones</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Preguntas frecuentes</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
+                    Suscríbete
+                </h4>
+                <p class="text-gray-400 text-sm">
+                    Recibe las mejores ofertas semanales en tu correo.
+                </p>
+                <form class="flex flex-col gap-2">
+                    <input type="email" placeholder="tu@email.com"
+                        class="bg-gray-800 border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 rounded-lg transition">
+                        Unirse
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-xs">
+    <p>&copy; 2024 MercaBlue Supermercados S.A. Todos los derechos reservados.</p>
+    
+    <div class="flex items-center gap-3">
+        <span class="text-gray-600 text-xs mr-1">Métodos de pago:</span>
+    
+        <!-- Visa -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Visa_Inc._logo_%282014%E2%80%932021%29.svg/1280px-Visa_Inc._logo_%282014%E2%80%932021%29.svg.png" alt="Visa"
+            class="h-5 opacity-60 hover:opacity-100 transition">
+    
+        <!-- Mastercard -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard"
+            class="h-5 opacity-60 hover:opacity-100 transition">
+    
+        <!-- Nequi -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/NEQUI.jpg" alt="Nequi"
+            class="h-5 opacity-60 hover:opacity-100 transition">
+    
+        <!-- Bancolombia -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/Logo_Bancolombia2.png"
+            alt="Bancolombia" class="h-5 opacity-60 hover:opacity-100 transition">
+    
+        <!-- PSE -->
+        <img src="https://www.cootransmede.com/wp-content/uploads/2022/02/logo-pse-300x300-1.png" alt="PSE"
+            class="h-5 opacity-60 hover:opacity-100 transition">
+    
+    </div>
+    </div>
+    </footer>
+
+    <!-- PANEL LATERAL DEL CARRITO -->
+    <div id="panel-carrito"
+        class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+    
+        <!-- Header del panel -->
+        <div class="bg-blue-500 text-white px-6 py-4 flex justify-between items-center">
+            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd"
+                    d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                    clip-rule="evenodd" />
+            </svg>
+            <h2 class="text-lg font-bold "> Mi Carrito</h2>
+            <button onclick="cerrarCarrito()"
+                class="text-white hover:text-blue-200 text-2xl font-bold transition">✕</button>
+        </div>
+    
+        <!-- Lista de productos -->
+        <ul id="lista-carrito" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <p class="text-gray-400 text-sm text-center mt-10">Tu carrito está vacío</p>
+        </ul>
+    
+        <!-- Footer con total y botón -->
+        <div class="border-t border-gray-200 px-6 py-4 space-y-3">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600 font-semibold">Total:</span>
+                <span class="text-blue-600 font-extrabold text-xl">$<span id="total">0</span></span>
+            </div>
+            <button onclick="confirmarCompra()"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
+                Confirmar compra
+            </button>
+        </div>
+    </div>
+    
+    <!-- Fondo oscuro detrás del panel -->
+    <div id="overlay-carrito"
+        class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-40"
+        onclick="cerrarCarrito()"></div>
+
+
+    <!-- MODAL INICIAR SESIÓN -->
+<div id="modal-login" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+
+    <!-- Fondo oscuro -->
+    <div class="absolute inset-0 bg-black opacity-50" onclick="cerrarLogin()"></div>
+
+    <!-- Contenido del modal -->
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-blue-500 px-8 py-6 text-white text-center">
+            <img src="images/logo.svg" alt="MercaBlue" class="h-10 mx-auto mb-2">
+            <h2 class="text-xl font-bold">Bienvenido a MercaBlue</h2>
+        </div>
+
+        <!-- Tabs: Iniciar sesión / Registrarse -->
+        <div class="flex border-b border-gray-200">
+            <button id="tab-login" onclick="mostrarTab('login')"
+                class="flex-1 py-3 text-sm font-semibold text-blue-500 border-b-2 border-blue-500 transition">
+                Iniciar Sesión
+            </button>
+            <button id="tab-registro" onclick="mostrarTab('registro')"
+                class="flex-1 py-3 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-blue-400 transition">
+                Crear Cuenta
+            </button>
+        </div>
+
+        <div class="px-8 py-6">
+
+            <!-- FORMULARIO LOGIN -->
+            <div id="form-login">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                        <input type="email" id="login-email" placeholder="tu@email.com"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Contraseña</label>
+                        <input type="password" id="login-password" placeholder="••••••••"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <button onclick="iniciarSesion()"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition mt-2">
+                        Iniciar Sesión
+                    </button>
+                    <p class="text-center text-gray-400 text-xs">
+                        ¿No tienes cuenta?
+                        <span onclick="mostrarTab('registro')"
+                            class="text-blue-500 font-semibold cursor-pointer hover:underline">
+                            Regístrate gratis
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FORMULARIO REGISTRO -->
+            <div id="form-registro" class="hidden">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Nombre</label>
+                            <input type="text" id="nombre" placeholder="Juan"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Apellido</label>
+                            <input type="text" id="apellido" placeholder="Pérez"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                        <input type="email" id="email" placeholder="tu@email.com"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Teléfono</label>
+                        <input type="tel" id="telefono" placeholder="300 000 0000"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Contraseña</label>
+                        <input type="password" id="password" placeholder="Mínimo 6 caracteres"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <button onclick="validarFormulario()"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
+                        Crear Cuenta
+                    </button>
+                    <p class="text-center text-gray-400 text-xs">
+                        ¿Ya tienes cuenta?
+                        <span onclick="mostrarTab('login')"
+                            class="text-blue-500 font-semibold cursor-pointer hover:underline">
+                            Inicia sesión
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
