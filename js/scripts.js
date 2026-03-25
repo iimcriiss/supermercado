@@ -179,108 +179,151 @@ function validarFormulario() {
     alert('¡Registro exitoso!');
     return true;
 }
+// =============================================
+//  TOAST (requerido por buscador y suscripción)
+// =============================================
 
-// ═══════════════════════════════════════
-// SLIDER DE OFERTAS
-// ═══════════════════════════════════════
-let slideActual = 0;
-const totalSlides = 3;
+function mostrarToast(mensaje) {
+    const existente = document.getElementById('toast-mercablue');
+    if (existente) existente.remove();
 
-function actualizarSlider() {
-    const slider = document.getElementById('slider');
-    if (!slider) return;
-    slider.style.transform = `translateX(-${slideActual * 100}%)`;
-
-    for (let i = 0; i < totalSlides; i++) {
-        const punto = document.getElementById(`punto-${i}`);
-        if (punto) punto.classList.toggle('opacity-50', i !== slideActual);
-    }
+    const toast = document.createElement('div');
+    toast.id = 'toast-mercablue';
+    toast.textContent = mensaje;
+    toast.style.cssText = `
+        position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+        background:#111827; color:#fff; font-size:14px; font-weight:600;
+        padding:12px 24px; border-radius:9999px; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+        z-index:9999; opacity:0; transition:opacity 0.3s;
+    `;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.style.opacity = '1');
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
-function cambiarSlide(direccion) {
-    slideActual = (slideActual + direccion + totalSlides) % totalSlides;
-    actualizarSlider();
-}
 
-function irASlide(indice) {
-    slideActual = indice;
-    actualizarSlider();
-}
+// =============================================
+//  BUSCADOR + SUSCRIPCIÓN (DOMContentLoaded unificado)
+// =============================================
 
-setInterval(() => cambiarSlide(1), 4000);
+document.addEventListener('DOMContentLoaded', () => {
 
-// ═══════════════════════════════════════
-// MODAL LOGIN / REGISTRO
-// ═══════════════════════════════════════
-function abrirLogin() {
-    document.getElementById('modal-login').classList.remove('hidden');
-    mostrarTab('login');
-}
+    // --- Buscador ---
+    const inputBuscar = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
+    const btnBuscar = document.querySelector('nav button');
 
-function cerrarLogin() {
-    document.getElementById('modal-login').classList.add('hidden');
-}
-
-function mostrarTab(tab) {
-    const formLogin    = document.getElementById('form-login');
-    const formRegistro = document.getElementById('form-registro');
-    const tabLogin     = document.getElementById('tab-login');
-    const tabRegistro  = document.getElementById('tab-registro');
-
-    if (tab === 'login') {
-        formLogin.classList.remove('hidden');
-        formRegistro.classList.add('hidden');
-        tabLogin.classList.add('text-blue-500', 'border-blue-500');
-        tabLogin.classList.remove('text-gray-400', 'border-transparent');
-        tabRegistro.classList.add('text-gray-400', 'border-transparent');
-        tabRegistro.classList.remove('text-blue-500', 'border-blue-500');
-    } else {
-        formRegistro.classList.remove('hidden');
-        formLogin.classList.add('hidden');
-        tabRegistro.classList.add('text-blue-500', 'border-blue-500');
-        tabRegistro.classList.remove('text-gray-400', 'border-transparent');
-        tabLogin.classList.add('text-gray-400', 'border-transparent');
-        tabLogin.classList.remove('text-blue-500', 'border-blue-500');
-    }
-}
-
-function iniciarSesion() {
-    let email = document.getElementById('login-email').value;
-    let pass  = document.getElementById('login-password').value;
-
-    if (!email || !pass) {
-        alert('Completa todos los campos');
-        return;
+    if (inputBuscar) {
+        inputBuscar.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') ejecutarBusqueda();
+        });
     }
 
-    if (!email.includes('@')) {
-        alert('Email inválido');
-        return;
+    if (btnBuscar) {
+        btnBuscar.addEventListener('click', ejecutarBusqueda);
     }
 
-    // 🔥 SIMULACIÓN DE ROLES
-    let rol = "cliente";
-
-    if (email === "admin@mercablue.com") {
-        rol = "admin";
+    // Leer parámetro ?buscar= al cargar productos.html
+    const termino = new URLSearchParams(window.location.search).get('buscar');
+    if (termino) {
+        if (inputBuscar) inputBuscar.value = termino;
+        filtrarProductosEnPagina(termino);
     }
 
-    // Guardamos el rol
-    localStorage.setItem("rol", rol);
+    // --- Suscripción footer ---
+    const formSub = document.querySelector('footer form');
+    if (formSub) {
+        formSub.addEventListener('submit', (e) => {
+            e.preventDefault();
+            enviarSuscripcion();
+        });
 
-    // Mostrar botón si es admin
-    mostrarBotonVentas();
-
-    alert('¡Bienvenido a MercaBlue!');
-    cerrarLogin();
-}
-function mostrarBotonVentas() {
-    let rol = localStorage.getItem("rol");
-
-    if (rol === "admin") {
-        document.getElementById("btn-ventas").classList.remove("hidden");
+        const btnUnirse = formSub.querySelector('button');
+        if (btnUnirse) {
+            btnUnirse.addEventListener('click', (e) => {
+                e.preventDefault();
+                enviarSuscripcion();
+            });
+        }
     }
-}
-document.addEventListener("DOMContentLoaded", () => {
-    mostrarBotonVentas();
+
 });
+
+
+// =============================================
+//  FUNCIONES DEL BUSCADOR
+// =============================================
+
+function ejecutarBusqueda() {
+    const input = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
+    const termino = input?.value.trim();
+
+    if (!termino) {
+        mostrarToast('🔍 Escribe algo para buscar');
+        return;
+    }
+
+    const estaEnProductos = window.location.pathname.includes('productos');
+    if (!estaEnProductos) {
+        window.location.href = `productos.html?buscar=${encodeURIComponent(termino)}`;
+    } else {
+        filtrarProductosEnPagina(termino);
+    }
+}
+
+function filtrarProductosEnPagina(termino) {
+    const tarjetas = document.querySelectorAll('[data-nombre]');
+    const terminoLower = termino.toLowerCase();
+    let encontrados = 0;
+
+    tarjetas.forEach(tarjeta => {
+        const nombre = tarjeta.getAttribute('data-nombre').toLowerCase();
+        const categoria = (tarjeta.getAttribute('data-categoria') || '').toLowerCase();
+        const visible = nombre.includes(terminoLower) || categoria.includes(terminoLower);
+        tarjeta.style.display = visible ? '' : 'none';
+        if (visible) encontrados++;
+    });
+
+    mostrarToast(encontrados > 0
+        ? `🔍 ${encontrados} resultado(s) para "${termino}"`
+        : `😕 Sin resultados para "${termino}"`
+    );
+}
+
+
+// =============================================
+//  FUNCIÓN DE SUSCRIPCIÓN
+// =============================================
+
+function enviarSuscripcion() {
+    const input = document.querySelector('footer input[type="email"]');
+    const email = input?.value.trim();
+
+    if (!email) {
+        mostrarToast('⚠️ Ingresa tu correo para suscribirte');
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        mostrarToast('⚠️ Ingresa un correo válido');
+        return;
+    }
+
+    const suscriptores = JSON.parse(localStorage.getItem('suscriptores_mercablue') || '[]');
+    if (suscriptores.includes(email)) {
+        mostrarToast('ℹ️ Ya estás suscrito con ese correo');
+        return;
+    }
+
+    suscriptores.push(email);
+    localStorage.setItem('suscriptores_mercablue', JSON.stringify(suscriptores));
+    input.value = '';
+
+    // Para integración real con EmailJS:
+    // emailjs.send("SERVICE_ID", "TEMPLATE_ID", { email }, "PUBLIC_KEY");
+
+    mostrarToast('📧 ¡Suscripción exitosa! Revisa tu correo pronto');
+}
