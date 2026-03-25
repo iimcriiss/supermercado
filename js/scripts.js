@@ -154,3 +154,122 @@ function validarFormulario() {
     alert("Registro exitoso");
     return true;
 }
+// =============================================
+//  BUSCADOR
+// =============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const inputBuscar = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
+    const btnBuscar = document.querySelector('nav button');
+
+    if (inputBuscar) {
+        inputBuscar.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') ejecutarBusqueda();
+        });
+    }
+
+    if (btnBuscar) {
+        btnBuscar.addEventListener('click', ejecutarBusqueda);
+    }
+});
+
+function ejecutarBusqueda() {
+    const input = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
+    const termino = input?.value.trim();
+
+    if (!termino) {
+        mostrarToast('🔍 Escribe algo para buscar');
+        return;
+    }
+
+    const estaEnProductos = window.location.pathname.includes('productos');
+    if (!estaEnProductos) {
+        window.location.href = `productos.html?buscar=${encodeURIComponent(termino)}`;
+    } else {
+        filtrarProductosEnPagina(termino);
+    }
+}
+
+function filtrarProductosEnPagina(termino) {
+    const tarjetas = document.querySelectorAll('[data-nombre]');
+    const terminoLower = termino.toLowerCase();
+    let encontrados = 0;
+
+    tarjetas.forEach(tarjeta => {
+        const nombre = tarjeta.getAttribute('data-nombre').toLowerCase();
+        const categoria = (tarjeta.getAttribute('data-categoria') || '').toLowerCase();
+        const visible = nombre.includes(terminoLower) || categoria.includes(terminoLower);
+        tarjeta.style.display = visible ? '' : 'none';
+        if (visible) encontrados++;
+    });
+
+    mostrarToast(encontrados > 0
+        ? `🔍 ${encontrados} resultado(s) para "${termino}"`
+        : `😕 Sin resultados para "${termino}"`
+    );
+}
+
+// Leer parámetro de búsqueda al cargar productos.html
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const termino = params.get('buscar');
+    if (termino) {
+        const input = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
+        if (input) input.value = termino;
+        filtrarProductosEnPagina(termino);
+    }
+});
+
+
+// =============================================
+//  SUSCRIPCIÓN POR CORREO (footer)
+// =============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const formSub = document.querySelector('footer form');
+    if (!formSub) return;
+
+    formSub.addEventListener('submit', (e) => {
+        e.preventDefault();
+        enviarSuscripcion();
+    });
+
+    const btnUnirse = formSub.querySelector('button');
+    if (btnUnirse) {
+        btnUnirse.addEventListener('click', (e) => {
+            e.preventDefault();
+            enviarSuscripcion();
+        });
+    }
+});
+
+function enviarSuscripcion() {
+    const input = document.querySelector('footer input[type="email"]');
+    const email = input?.value.trim();
+
+    if (!email) {
+        mostrarToast('⚠️ Ingresa tu correo para suscribirte');
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        mostrarToast('⚠️ Ingresa un correo válido');
+        return;
+    }
+
+    const suscriptores = JSON.parse(localStorage.getItem('suscriptores_mercablue') || '[]');
+    if (suscriptores.includes(email)) {
+        mostrarToast('ℹ️ Ya estás suscrito con ese correo');
+        return;
+    }
+
+    suscriptores.push(email);
+    localStorage.setItem('suscriptores_mercablue', JSON.stringify(suscriptores));
+    input.value = '';
+
+    // Para integración real con EmailJS:
+    // emailjs.send("SERVICE_ID", "TEMPLATE_ID", { email }, "PUBLIC_KEY");
+
+    mostrarToast('📧 ¡Suscripción exitosa! Revisa tu correo pronto');
+}
