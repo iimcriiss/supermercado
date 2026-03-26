@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MercaBlue </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="images/icono_navegador.ico" />
+</head>
+<body class="bg-gray-50">
+     <header class="sticky top-0 z-50 shadow-md">
+        <!-- Navbar principal-->
+        <nav class="bg-blue-500 text-white px-12 py-3 flex justify-between items-center">
+
+            <!-- Logo -->
+            <a class="px-14 p-0" href="/index.html">
+                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-40 h-full transform scale-125 origin-left">
+            </a>
+
+            <!-- Buscador central -->
+            <div class="flex items-center bg-white rounded-full overflow-hidden w-[560px] shadow-md">
+                <select
+                    class="text-gray-500 text-sm px-4 py-2.5 bg-white border-r border-gray-200 outline-none cursor-pointer">
+                    <option>Categorías</option>
+                    <option>Frutas</option>
+                    <option>Verduras</option>
+                    <option>Lácteos</option>
+                    <option>Bebidas</option>
+                    <option>Carnes</option>
+                </select>
+                <input type="text" placeholder="Busca tu producto aquí..."
+                    class="flex-1 text-gray-600 text-sm px-4 py-2.5 outline-none">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
+                    Buscar
+                </button>
+            </div>
+
+            <!-- Acciones: usuario + carrito -->
+            <div class="flex items-center gap-8">
+
+                <!-- Ventas (Solo admin)-->
+                <a id="btn-ventas" href="#" class="hidden flex items-center gap-2 hover:text-blue-200 transition">
+                    <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+                        <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="1.5">
+                            <path
+                                d="M14 9.846c-1-.923-3.667-1.23-3.667.616S14 11.385 14 13.23s-3 1.846-4 .615m2 .857V16m0-6.887V8M2 8l9.732-4.866a.6.6 0 0 1 .536 0L22 8" />
+                            <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
+                        </g>
+                    </svg>
+                    <span class="text-sm font-semibold"> Ventas </span>
+                </a>
+
+
+                <!-- Iniciar sesión -->
+                <a onclick="abrirLogin()" id="btn-login"
+                    class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span id="texto-usuario" class="text-sm font-semibold">Iniciar Sesión</span>
+                </a>
+
+                <!-- Carrito -->
+                <a onclick="abrirCarrito()"
+                    class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                    <div class="relative">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span id="contador-carrito"
+                            class="absolute -top-1 -right-2 bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-blue-500">
+                            0
+                        </span>
+                    </div>
+                    <span class="text-sm font-semibold">Carrito</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main> </main>
+    <footer> 
+        <footer class="bg-gray-900 text-white pt-16 pb-8 px-20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div class="space-y-4">
+                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-46 brightness-0 invert" />
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Llevamos la frescura del campo directamente a tu mesa. Calidad
+                    garantizada en cada producto y entrega rápida en la puerta de tu
+                    hogar.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="bg-gray-800 p-2 rounded-full hover:bg-blue-500 transition shadow-sm">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="bg-gray-800 p-2 rounded-full hover:bg-pink-500 transition shadow-sm">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
+                    Compañía
+                </h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Sobre nosotros</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Nuestras tiendas</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Trabaja con nosotros</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Blog de cocina</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
+                    Soporte
+                </h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Centro de ayuda</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Políticas de envío</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Términos y condiciones</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-blue-400 transition">Preguntas frecuentes</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
+                    Suscríbete
+                </h4>
+                <p class="text-gray-400 text-sm">
+                    Recibe las mejores ofertas semanales en tu correo.
+                </p>
+                <form class="flex flex-col gap-2">
+                    <input type="email" placeholder="tu@email.com"
+                        class="bg-gray-800 border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 rounded-lg transition">
+                        Unirse
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div
+            class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-xs">
+            <p>&copy; 2024 MercaBlue Supermercados S.A. Todos los derechos reservados.</p>
+
+            <div class="flex items-center gap-3">
+                <span class="text-gray-600 text-xs mr-1">Métodos de pago:</span>
+
+                <!-- Visa -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Visa_Inc._logo_%282014%E2%80%932021%29.svg/1280px-Visa_Inc._logo_%282014%E2%80%932021%29.svg.png"
+                    alt="Visa" class="h-5 opacity-60 hover:opacity-100 transition">
+
+                <!-- Mastercard -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard"
+                    class="h-5 opacity-60 hover:opacity-100 transition">
+
+                <!-- Nequi -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/NEQUI.jpg" alt="Nequi"
+                    class="h-5 opacity-60 hover:opacity-100 transition">
+
+                <!-- Bancolombia -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/Logo_Bancolombia2.png" alt="Bancolombia"
+                    class="h-5 opacity-60 hover:opacity-100 transition">
+
+                <!-- PSE -->
+                <img src="https://www.cootransmede.com/wp-content/uploads/2022/02/logo-pse-300x300-1.png" alt="PSE"
+                    class="h-5 opacity-60 hover:opacity-100 transition">
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- PANEL LATERAL DEL CARRITO -->
+    <div id="panel-carrito"
+        class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+
+        <!-- Header del panel -->
+        <div class="bg-blue-500 text-white px-6 py-4 flex justify-between items-center">
+            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd"
+                    d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                    clip-rule="evenodd" />
+            </svg>
+            <h2 class="text-lg font-bold "> Mi Carrito</h2>
+            <button onclick="cerrarCarrito()"
+                class="text-white hover:text-blue-200 text-2xl font-bold transition">✕</button>
+        </div>
+
+        <!-- Lista de productos -->
+        <ul id="lista-carrito" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <p class="text-gray-400 text-sm text-center mt-10">Tu carrito está vacío</p>
+        </ul>
+
+        <!-- Footer con total y botón -->
+        <div class="border-t border-gray-200 px-6 py-4 space-y-3">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600 font-semibold">Total:</span>
+                <span class="text-blue-600 font-extrabold text-xl">$<span id="total">0</span></span>
+            </div>
+            <button onclick="confirmarCompra()"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
+                Confirmar compra
+            </button>
+        </div>
+    </div>
+
+    <!-- Fondo oscuro detrás del panel -->
+    <div id="overlay-carrito"
+        class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-40"
+        onclick="cerrarCarrito()"></div>
+
+
+    <!-- MODAL INICIAR SESIÓN -->
+    <div id="modal-login" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+
+    <!-- Fondo oscuro -->
+    <div class="absolute inset-0 bg-black opacity-50" onclick="cerrarLogin()"></div>
+
+    <!-- Contenido del modal -->
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-blue-500 px-8 py-6 text-white text-center">
+            <img src="images/logo.svg" alt="MercaBlue" class="h-10 mx-auto mb-2">
+            <h2 class="text-xl font-bold">Bienvenido a MercaBlue</h2>
+        </div>
+
+        <!-- Tabs: Iniciar sesión / Registrarse -->
+        <div class="flex border-b border-gray-200">
+            <button id="tab-login" onclick="mostrarTab('login')"
+                class="flex-1 py-3 text-sm font-semibold text-blue-500 border-b-2 border-blue-500 transition">
+                Iniciar Sesión
+            </button>
+            <button id="tab-registro" onclick="mostrarTab('registro')"
+                class="flex-1 py-3 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-blue-400 transition">
+                Crear Cuenta
+            </button>
+        </div>
+
+        <div class="px-8 py-6">
+
+            <!-- FORMULARIO LOGIN -->
+            <div id="form-login">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                        <input type="email" id="login-email" placeholder="tu@email.com"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Contraseña</label>
+                        <input type="password" id="login-password" placeholder="••••••••"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+
+                    <!-- MENSAJE LOGIN -->
+                    <div id="msg-login" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
+
+                    <button onclick="iniciarSesion()"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition mt-2">
+                        Iniciar Sesión
+                    </button>
+                    <p class="text-center text-gray-400 text-xs">
+                        ¿No tienes cuenta?
+                        <span onclick="mostrarTab('registro')"
+                            class="text-blue-500 font-semibold cursor-pointer hover:underline">
+                            Regístrate gratis
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FORMULARIO REGISTRO -->
+            <div id="form-registro" class="hidden">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Nombre</label>
+                            <input type="text" id="nombre" placeholder="Juan"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Apellido</label>
+                            <input type="text" id="apellido" placeholder="Pérez"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                        <input type="email" id="email" placeholder="tu@email.com"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Teléfono</label>
+                        <input type="tel" id="telefono" placeholder="300 000 0000"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-600 text-sm font-medium">Contraseña</label>
+                        <input type="password" id="password" placeholder="Mínimo 6 caracteres"
+                            class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+
+                    <!-- MENSAJE REGISTRO -->
+                    <div id="msg-registro" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
+
+                    <button onclick="validarFormulario()"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
+                        Crear Cuenta
+                    </button>
+                    <p class="text-center text-gray-400 text-xs">
+                        ¿Ya tienes cuenta?
+                        <span onclick="mostrarTab('login')"
+                            class="text-blue-500 font-semibold cursor-pointer hover:underline">
+                            Inicia sesión
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    </footer>
+    
+    
+</body>
+</html>
