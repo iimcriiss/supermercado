@@ -96,30 +96,39 @@ function actualizarContadorNavbar() {
 
 function confirmarCompra() {
     if (carrito.length === 0) {
-        alert('Tu carrito está vacío');
+        mostrarToast('⚠️ Tu carrito está vacío');
         return;
     }
 
-    if (confirm('¿Confirmar la compra?')) {
+    // Verificar si el usuario está logueado
+    const usuario = localStorage.getItem('usuario');
+    if (!usuario) {
+        mostrarToast('🔒 Inicie sesión para realizar la compra');
+        abrirLogin();
+        return;
+    }
+
+    if (confirm('¿Deseas confirmar tu compra por $' + document.getElementById('total').textContent + '?')) {
         fetch('php/guardar_venta.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(carrito)
         })
-        .then(res => res.text())
+        .then(res => res.json())
         .then(data => {
-            alert(data);
-            carrito = [];
-            mostrarCarrito();
-            actualizarContadorNavbar();
-            cerrarCarrito();
+            if (data.status === 'success') {
+                alert('✅ ' + data.message);
+                carrito = [];
+                mostrarCarrito();
+                actualizarContadorNavbar();
+                cerrarCarrito();
+            } else {
+                alert('❌ Error: ' + data.message);
+            }
         })
-        .catch(() => {
-            alert('Compra registrada correctamente');
-            carrito = [];
-            mostrarCarrito();
-            actualizarContadorNavbar();
-            cerrarCarrito();
+        .catch(err => {
+            console.error('Error en la compra:', err);
+            alert('❌ Hubo un problema al procesar su pedido. Por favor, intente de nuevo.');
         });
     }
 }

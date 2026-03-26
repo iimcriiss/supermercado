@@ -2,74 +2,102 @@
 session_start();
 require_once 'db.php';
 
+header('Content-Type: application/json');
+
 // 1. VERIFICAR que el usuario esté logueado
 if (!isset($_SESSION['id_usuario'])) {
-    die("No autorizado");
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "No autorizado. Inicie sesión para comprar."]);
+    exit;
 }
 
 // 2. RECIBIR los datos JSON
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data || !is_array($data)) {
-    die("No hay datos de venta");
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "No hay datos de venta"]);
+    exit;
 }
 
 try {
+    // Iniciar transacción para asegurar que todo se guarde bien
+    $pdo->beginTransaction();
+
     // 3. CALCULAR total y validar cada producto
     $total = 0;
-    foreach ($data as $producto) {
-        $cantidad = (int)$producto['cantidad'];
-        $precio   = (float)$producto['precio'];
-
-        if ($cantidad <= 0 || $precio <= 0) {
-            die("Datos de producto inválidos");
-        }
-
-        $total += $precio * $cantidad;
-    }
-
-    // 4. INSERTAR la venta con id_usuario de la sesión
     $id_usuario = $_SESSION['id_usuario'];
-    $stmt = $pdo->prepare("INSERT INTO ventas (id_usuario, total) VALUES (?, ?)");
-    $stmt->execute([$id_usuario, $total]);
 
-    // 5. OBTENER el id de la venta recién insertada
+    // 4. INSERTAR el encabezado de la venta
+    $stmt_venta = $pdo->prepare("INSERT INTO ventas (id_usuario, total, estado) VALUES (?, ?, 'completada')");
+    $stmt_venta->execute([$id_usuario, 0]); // Total temporal
     $id_venta = $pdo->lastInsertId();
 
-    // 6. INSERTAR el detalle de cada producto
+    // Preparar consultas para el detalle y actualización de stock
     $stmt_detalle = $pdo->prepare("INSERT INTO ventas_detalle 
         (id_venta, id_producto, cantidad, precio_unitario, subtotal) 
         VALUES (?, ?, ?, ?, ?)");
+    
+    $stmt_update_stock = $pdo->prepare("UPDATE productos SET stock = stock - ? WHERE id_producto = ?");
 
-    foreach ($data as $producto) {
-        $id_producto    = (int)$producto['id_producto'];
-        $cantidad       = (int)$producto['cantidad'];
-        $precio_unitario = (float)$producto['precio'];
-        $subtotal       = $cantidad * $precio_unitario;
+    foreach ($data as $item) {
+        $nombre   = $item['nombre'];
+        $cantidad = (int)$item['cantidad'];
+        $precio   = (float)$item['precio'];
 
-        // Verificar que el producto existe en la BD
-        $check = $pdo->prepare("SELECT id_producto FROM productos WHERE id_producto = ?");
-        $check->execute([$id_producto]);
-        if (!$check->fetch()) {
-            die("El producto con id $id_producto no existe");
+        if ($cantidad <= 0 || $precio <= 0) {
+            throw new Exception("Datos de producto inválidos para: $nombre");
         }
 
+        // Buscar producto por nombre (ya que el frontend envía nombres)
+        $stmt_prod = $pdo->prepare("SELECT id_producto, stock FROM productos WHERE nombre = ? AND activo = 1");
+        $stmt_prod->execute([$nombre]);
+        $producto_db = $stmt_prod->fetch();
+
+        if (!$producto_db) {
+            throw new Exception("El producto '$nombre' no existe en nuestro catálogo.");
+        }
+
+        if ($producto_db['stock'] < $cantidad) {
+            throw new Exception("Stock insuficiente para: $nombre (Disponible: " . $producto_db['stock'] . ")");
+        }
+
+        $id_producto = $producto_db['id_producto'];
+        $subtotal = $cantidad * $precio;
+        $total += $subtotal;
+
+        // Insertar detalle
         $stmt_detalle->execute([
             $id_venta,
             $id_producto,
             $cantidad,
-            $precio_unitario,
+            $precio,
             $subtotal
         ]);
+
+        // Actualizar stock
+        $stmt_update_stock->execute([$cantidad, $id_producto]);
     }
 
+    // 5. Actualizar el total final de la venta
+    $stmt_update_total = $pdo->prepare("UPDATE ventas SET total = ? WHERE id_venta = ?");
+    $stmt_update_total->execute([$total, $id_venta]);
+
+    // Confirmar todo
+    $pdo->commit();
+
     echo json_encode([
-        "mensaje" => "Venta guardada correctamente ✅",
+        "status" => "success",
+        "message" => "¡Compra realizada con éxito! ✅ Su pedido se ha registrado correctamente.",
         "id_venta" => $id_venta,
         "total"    => $total
     ]);
 
-} catch (PDOException $e) {
-    die("Error al guardar la venta: " . $e->getMessage());
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "Error al procesar la compra: " . $e->getMessage()]);
 }
-?>
+?>
