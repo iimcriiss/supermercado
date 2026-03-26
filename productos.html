@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MercaBlue - Productos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="images/icono_navegador.ico" />
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- ═══════════════════════════════ HEADER / NAVBAR ═══════════════════════════════ -->
+    <header class="sticky top-0 z-50 shadow-md">
+        <nav class="bg-blue-500 text-white px-12 py-3 flex justify-between items-center">
+
+            <!-- Logo -->
+            <a class="px-14 p-0" href="/index.html">
+                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-40 h-full transform scale-125 origin-left">
+            </a>
+
+            <!-- Buscador central -->
+            <div class="flex items-center bg-white rounded-full overflow-hidden w-[560px] shadow-md">
+                <select
+                    class="text-gray-500 text-sm px-4 py-2.5 bg-white border-r border-gray-200 outline-none cursor-pointer">
+                    <option>Categorías</option>
+                    <option>Frutas</option>
+                    <option>Verduras</option>
+                    <option>Lácteos</option>
+                    <option>Bebidas</option>
+                    <option>Carnes</option>
+                    <option>Panadería</option>
+                </select>
+                <input type="text" placeholder="Busca tu producto aquí..."
+                    class="flex-1 text-gray-600 text-sm px-4 py-2.5 outline-none">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
+                    Buscar
+                </button>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex items-center gap-8">
+
+                <!-- Ventas (Solo admin) -->
+                <a id="btn-ventas" href="#" class="hidden flex items-center gap-2 hover:text-blue-200 transition">
+                    <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+                        <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="1.5">
+                            <path
+                                d="M14 9.846c-1-.923-3.667-1.23-3.667.616S14 11.385 14 13.23s-3 1.846-4 .615m2 .857V16m0-6.887V8M2 8l9.732-4.866a.6.6 0 0 1 .536 0L22 8" />
+                            <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
+                        </g>
+                    </svg>
+                    <span class="text-sm font-semibold">Ventas</span>
+                </a>
+
+                <!-- Iniciar sesión -->
+                <a onclick="abrirLogin()" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-sm font-semibold">Iniciar Sesión</span>
+                </a>
+
+                <!-- Carrito -->
+                <a onclick="abrirCarrito()"
+                    class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                    <div class="relative">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span id="contador-carrito"
+                            class="absolute -top-1 -right-2 bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-blue-500">0</span>
+                    </div>
+                    <span class="text-sm font-semibold">Carrito</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- BANNER PRODUCTOS -->
+    <div class="w-full">
+        <img src="images/banner_productos.png" alt="Banner Productos" class="w-full object-cover">
+    </div>
+    <!-- ═══════════════════════════════ LAYOUT PRINCIPAL ═══════════════════════════════ -->
+    <div class="flex min-h-screen">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="w-72 min-w-[288px] bg-white shadow-sm border-r border-gray-100 flex flex-col">
+
+            <!-- Título sidebar -->
+            <div class="bg-blue-500 text-white font-bold text-lg px-6 py-4">
+                Categorías
+            </div>
+
+            <div class="sidebar-scroll overflow-y-auto flex-1 py-4">
+
+                <!-- Categoría: Alimentos y Bebidas -->
+                <div class="mb-2">
+                    <button onclick="toggleCategoria('alimentos-bebidas')"
+                        class="sidebar-link w-full flex items-center gap-3 px-6 py-2.5 font-semibold text-gray-800 hover:bg-blue-50 text-left">
+                        <span id="dot-alimentos-bebidas"
+                            class="w-3 h-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
+                        Alimentos y Bebidas
+                    </button>
+                    <div id="sub-alimentos-bebidas" class="hidden pl-10 pr-6 pb-2 space-y-0.5">
+                        <button onclick="filtrarSubcategoria('alimentos-basicos')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Alimentos
+                            Básicos</button>
+                        <button onclick="filtrarSubcategoria('charcuteria')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Charcutería</button>
+                        <button onclick="filtrarSubcategoria('enlatados')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Enlatados</button>
+                        <button onclick="filtrarSubcategoria('helados')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Helados</button>
+                        <button onclick="filtrarSubcategoria('postres')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Postres</button>
+                        <button onclick="filtrarSubcategoria('bebidas-liquidas')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Bebidas
+                            Líquidas</button>
+                        <button onclick="filtrarSubcategoria('bebidas-polvo')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Bebidas en
+                            Polvo</button>
+                    </div>
+                </div>
+
+                <!-- Categoría: Frutas y Verduras -->
+                <div class="mb-2">
+                    <button onclick="toggleCategoria('frutas-verduras')"
+                        class="sidebar-link w-full flex items-center gap-3 px-6 py-2.5 font-semibold text-gray-800 hover:bg-blue-50 text-left">
+                        <span id="dot-frutas-verduras"
+                            class="w-3 h-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
+                        Frutas y Verduras
+                    </button>
+                    <div id="sub-frutas-verduras" class="hidden pl-10 pr-6 pb-2 space-y-0.5">
+                        <button onclick="filtrarSubcategoria('frutas')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Frutas</button>
+                        <button onclick="filtrarSubcategoria('verduras')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Verduras</button>
+                        <button onclick="filtrarSubcategoria('hierbas')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Hierbas y
+                            Especias</button>
+                    </div>
+                </div>
+
+                <!-- Categoría: Carnes y Pescados -->
+                <div class="mb-2">
+                    <button onclick="toggleCategoria('carnes')"
+                        class="sidebar-link w-full flex items-center gap-3 px-6 py-2.5 font-semibold text-gray-800 hover:bg-blue-50 text-left">
+                        <span id="dot-carnes"
+                            class="w-3 h-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
+                        Carnes y Pescados
+                    </button>
+                    <div id="sub-carnes" class="hidden pl-10 pr-6 pb-2 space-y-0.5">
+                        <button onclick="filtrarSubcategoria('res')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Res</button>
+                        <button onclick="filtrarSubcategoria('pollo')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Pollo</button>
+                        <button onclick="filtrarSubcategoria('pescado')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Pescado y
+                            Mariscos</button>
+                        <button onclick="filtrarSubcategoria('cerdo')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Cerdo</button>
+                    </div>
+                </div>
+
+                <!-- Categoría: Lácteos y Huevos -->
+                <div class="mb-2">
+                    <button onclick="toggleCategoria('lacteos')"
+                        class="sidebar-link w-full flex items-center gap-3 px-6 py-2.5 font-semibold text-gray-800 hover:bg-blue-50 text-left">
+                        <span id="dot-lacteos"
+                            class="w-3 h-3 rounded-full border-2 border-gray-300 flex-shrink-0"></span>
+                        Lácteos y Huevos
+                    </button>
+                    <div id="sub-lacteos" class="hidden pl-10 pr-6 pb-2 space-y-0.5">
+                        <button onclick="filtrarSubcategoria('leche')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Leche</button>
+                        <button onclick="filtrarSubcategoria('queso')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Quesos</button>
+                        <button onclick="filtrarSubcategoria('huevos')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Huevos</button>
+                        <button onclick="filtrarSubcategoria('mantequilla')"
+                            class="sidebar-link block w-full text-left py-1.5 pl-4 text-sm text-gray-500">Mantequilla y
+                            Crema</button>
+                    </div>
+                </div>
+
+                <!-- ══ FILTRO POR PRECIO ══ -->
+                <div class="mt-4 border-t border-gray-100 pt-4">
+                    <p class="px-6 text-sm font-bold text-gray-700 mb-3">Filtrar por precio</p>
+                    <div class="px-4 flex flex-col gap-2">
+                        <button onclick="filtrarPorPrecio(0, 5000, this)"
+                            class="precio-btn text-left text-sm px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition">
+                            Menos de $5.000
+                        </button>
+                        <button onclick="filtrarPorPrecio(5000, 10000, this)"
+                            class="precio-btn text-left text-sm px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition">
+                            $5.000 - $10.000
+                        </button>
+                        <button onclick="filtrarPorPrecio(10000, 15000, this)"
+                            class="precio-btn text-left text-sm px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition">
+                            $10.000 - $15.000
+                        </button>
+                        <button onclick="filtrarPorPrecio(15000, 999999, this)"
+                            class="precio-btn text-left text-sm px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition">
+                            Más de $15.000
+                        </button>
+                        <button onclick="mostrarTodos()"
+                            class="text-left text-xs px-4 py-1.5 text-gray-400 hover:text-blue-500 transition">
+                            ✕ Quitar filtro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ── CONTENIDO PRINCIPAL ── -->
+        <main class="flex-1 px-8 py-6">
+
+            <!-- Breadcrumb -->
+            <nav class="text-sm text-gray-400 mb-1">
+                <span id="breadcrumb">
+                    <a href="/index.html" class="hover:text-blue-500 transition">Inicio</a>
+                    <span class="mx-1">/</span>
+                    <span class="text-blue-500 font-medium">Todos los Productos</span>
+                </span>
+            </nav>
+
+            <!-- Título sección -->
+            <h1 id="titulo-seccion" class="text-2xl font-bold text-gray-800 mb-6">Todos los Productos</h1>
+
+            <!-- Grid de productos -->
+            <div id="grid-productos" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+                <!-- Productos -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- LOS QUE FALTARON -->
+                <!-- ═══════════════════════════════════════════════════ -->
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Chuleta de Cerdo" data-categoria="cerdo" data-precio="11500 ">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt="Chuleta de Cerdo - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Chuleta de Cerdo\'s 500g', 11500 )"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Chuleta de Cerdo 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$11.500 </p>
+                    <p class="text-xs text-gray-400">Unidades a $11.500 </p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Costilla de Cerdo" data-categoria="cerdo" data-precio="15900">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt="Costilla de Cerdo - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Costilla de Cerdo\'s 500g', 15900)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Costilla de Cerdo 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$15.900</p>
+                    <p class="text-xs text-gray-400">Unidades a $15.900</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Tocino para Chicharrón" data-categoria="cerdo" data-precio="13200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt="Tocino para Chicharrón - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Tocino para Chicharrón\'s 500g', 13200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Tocino para Chicharrón 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$13.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $13.200</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Cañón de Cerdo en Medallones" data-categoria="cerdo" data-precio="14500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt="Cañón de Cerdo en Medallones - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Cañón de Cerdo en Medallones\'s 500g', 14500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Cañón de Cerdo en Medallones 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$14.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $14.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Posta de Bagre Rayado" data-categoria="pescado" data-precio="18900">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt=" Posta de Bagre Rayado Pesquera del Magdalena"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Posta de Bagre Rayado\'s 500g', 18900)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5"> Pesquera del Magdalena </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Posta de Bagre Rayado 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$18.900</p>
+                    <p class="text-xs text-gray-400">Unidades a $18.900</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Mojarra Roja Entera" data-categoria="pescado" data-precio="12500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt=" Mojarra Pesquera del Caribe"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Mojarra Roja Entera\'s 450g', 12500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5"> Pesquera del Caribe </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Mojarra Roja Entera 450g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$12.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $12.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- ENLATADOS -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Atun en Agua" data-categoria="enlatados" data-precio="6500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Atún" alt="Atún Van Camp's"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Atún en Agua Van Camp\'s 160g', 6500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Van Camp's</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Atún Lomitos en Agua 160g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$6.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $6.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer "
+                    data-nombre="Maiz Dulce" data-categoria="enlatados" data-precio="4200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Maíz+Dulce"
+                            alt="Maíz Dulce Zenú" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Maíz Dulce Zenú Lata 220g', 4200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Zenú</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Maíz Tierno Dulce Lata 220g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.200</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer" 
+                    data-nombre="Arvejas con Zanahoria" data-categoria="alimentos-basicos" data-precio="3800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Arvejas" alt="Arvejas Fruco"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Arvejas con Zanahoria Fruco 300g', 3800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Fruco</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Arvejas con Zanahoria Lata 300g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Sardinas en Tomate" data-categoria="pescado" data-precio="5500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Sardinas" alt="Sardinas"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Sardinas en Salsa de Tomate 425g', 5500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">La Sirena</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Sardinas en Salsa de Tomate 425g
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$5.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $5.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- RES -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Carne Molida" data-categoria="res" data-precio="15000">
+                    <div
+                        class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
+                        Corte Fresco</div>
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Carne+Molida"
+                            alt="Carne Molida" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Carne Molida de Res Primera 500g', 15000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Carne Molida de Res Especial 500g
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$15.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $30.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Lomo Ancho" data-categoria="res" data-precio="22000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Lomo+Ancho" alt="Lomo Ancho"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Lomo Ancho de Res Tajado 500g', 22000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Lomo Ancho de Res Tajado 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$22.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $44.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Costilla de Res" data-categoria="res" data-precio="14000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Costilla+Res"
+                            alt="Costilla de Res" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Costilla de Res Especial 500g', 14000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Costilla de Res Porcionada 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$14.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $28.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Carne para Desmechar" data-categoria="res" data-precio="16500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Falda+Res"
+                            alt="Carne Desmechar" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Carne para Desmechar Falda 500g', 16500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Carne de Res para Desmechar 500g
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$16.500</p>
+                    <p class="text-xs text-gray-400">Gramos a $33.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- POLLO -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Pechuga de Pollo" data-categoria="pollo" data-precio="18000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Pechuga" alt="Pechuga de Pollo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Pechuga de Pollo Fresca 1kg', 18000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Pechuga de Pollo Entera 1 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$18.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $18.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Muslos de Pollo" data-categoria="pollo" data-precio="9500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Muslos+Pollo"
+                            alt="Muslos de Pollo" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Muslos de Pollo Bandeja 500g', 9500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Muslos de Pollo Bandeja 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$9.500</p>
+                    <p class="text-xs text-gray-400">Gramos a $19.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Alitas de Pollo" data-categoria="pollo" data-precio="11000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Alitas" alt="Alitas de Pollo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Alitas de Pollo 500g', 11000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Alas de Pollo Especiales 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$11.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $22.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Pollo Entero" data-categoria="pollo" data-precio="28000">
+                    <div
+                        class="absolute top-3 left-3 bg-yellow-400 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
+                        Familiar</div>
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Pollo+Entero"
+                            alt="Pollo Entero" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Pollo Entero Sin Menudencias', 28000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Pollo Entero Fresco Sin Menudencias
+                        Aprox 2kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$28.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $28.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- HUEVOS -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Panal Huevos AA" data-categoria="huevos" data-precio="16500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Huevos+AA" alt="Huevos AA"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Panal Huevos Rojos AA x30', 16500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Kikes</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Panal Huevos Rojos Tamaño AA x 30
+                        Unidades</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$16.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $550 c/u</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Huevos A x12" data-categoria="huevos" data-precio="7200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Huevos+A+12" alt="Huevos A"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Caja Huevos A x12', 7200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Kikes</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Caja Huevos Rojos Tamaño A x 12
+                        Unidades</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$7.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $600 c/u</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Huevos Codorniz" data-categoria="huevos" data-precio="5500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Huevos+Codorniz"
+                            alt="Huevos Codorniz" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Huevos de Codorniz x24', 5500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Granja Local</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Huevos de Codorniz Frescos x 24
+                        Unidades</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$5.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $5.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Huevos Orgánicos" data-categoria="huevos" data-precio="12000">
+                    <div
+                        class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
+                        Orgánico</div>
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Huevos+Orgánicos"
+                            alt="Huevos Orgánicos" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Huevos Orgánicos Gallina Libre x12', 12000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Biocampo</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Huevos Orgánicos Gallina Libre x 12
+                        Unidades</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$12.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $1.000 c/u</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- HIERBAS -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Cilantro Fresco" data-categoria="hierbas" data-precio="1500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Cilantro" alt="Cilantro"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Cilantro Fresco Ramo', 1500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Cilantro Fresco Ramo Grande</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$1.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $1.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Ajo" data-categoria="hierbas" data-precio="3200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Ajo" alt="Ajo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Ajo Malla x3 Cabezas', 3200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">A Granel</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Ajo Blanco Malla x 3 Cabezas</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.200</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Perejil" data-categoria="hierbas" data-precio="1500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Perejil" alt="Perejil"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Perejil Crespo Ramo', 1500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Perejil Crespo Fresco Ramo</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$1.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $1.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Pimienta Negra" data-categoria="hierbas" data-precio="4800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Pimienta" alt="Pimienta Negra"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Pimienta Negra Molida 50g', 4800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">El Rey</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Pimienta Negra Molida Frasco 50g
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- ALIMENTOS BÁSICOS -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Arroz Blanco" data-categoria="alimentos-basicos" data-precio="3500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Arroz" alt="Arroz Diana"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Arroz Blanco 1kg', 3500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Diana</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Arroz Blanco Premium 1kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Aceite Vegetal" data-categoria="alimentos-basicos" data-precio="12000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Aceite" alt="Aceite"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Aceite Vegetal 900ml', 12000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Gourmet</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Aceite Girasol 900ml</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$12.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $12.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Sal Refinada" data-categoria="alimentos-basicos" data-precio="1800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Sal" alt="Sal"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Sal Refinada 1kg', 1800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Refisal</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Sal Refinada Yodada 1kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$1.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $1.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Azúcar Blanca" data-categoria="alimentos-basicos" data-precio="4200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Azucar" alt="Azúcar"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Azúcar Blanca 1kg', 4200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Incauca</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Azúcar Blanca Especial 1kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.200</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- CHARCUTERÍA -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Jamón Cocido" data-categoria="charcuteria" data-precio="8500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Jamon" alt="Jamón"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Jamón de Cerdo 250g', 8500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Zenú</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Jamón de Cerdo Tajado 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$8.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $8.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Salchicha Perro" data-categoria="charcuteria" data-precio="11000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Salchicha" alt="Salchicha"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Salchicha Perro x10', 11000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Ranchera</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Salchicha Perro Caliente x10</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$11.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $11.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Salami" data-categoria="charcuteria" data-precio="9800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Salami" alt="Salami"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Salami Tajado 100g', 9800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Villar</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Salami Tipo Italiano 100g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$9.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $9.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Chorizo Antioqueño" data-categoria="charcuteria" data-precio="14500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Chorizo" alt="Chorizo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Chorizo Antioqueño x6', 14500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Santa Rosano</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Chorizo Antioqueño x 6 Unid</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$14.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $14.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- BEBIDAS LÍQUIDAS -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Coca Cola 1.5L" data-categoria="bebidas-liquidas" data-precio="4500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=CocaCola" alt="Coca Cola"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Coca Cola 1.5 Litros', 4500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Coca-Cola</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Gaseosa Coca Cola 1.5 Litros</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Jugo" data-categoria="bebidas-liquidas" data-precio="6800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Jugo" alt="Jugo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Jugo1L', 6800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Hit</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Jugo 1L</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$6.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $6.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Agua Mineral" data-categoria="bebidas-liquidas" data-precio="2500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Agua" alt="Agua Mineral"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Agua Mineral 600ml', 2500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Cristal</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Agua Mineral Sin Gas 600ml</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$2.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $2.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Té Frío" data-categoria="bebidas-liquidas" data-precio="3800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Te" alt="Té Frío"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Té Frío Limón 400ml', 3800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Lipton</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Té Frío Sabor Limón 400ml</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- MANTEQUILLA Y CREMA -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Mantequilla Sal" data-categoria="mantequilla" data-precio="5500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Mantequilla" alt="Mantequilla"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Mantequilla con Sal 125g', 5500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Mantequilla con Sal 125g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$5.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $5.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Crema de Leche" data-categoria="mantequilla" data-precio="4800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Crema+Leche"
+                            alt="Crema de Leche" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Crema de Leche 200ml', 4800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Alquería</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Crema de Leche Bolsa 200ml</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Margarina" data-categoria="mantequilla" data-precio="3900">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Margarina" alt="Margarina"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Margarina de Girasol 250g', 3900)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">La Fina</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Margarina de Girasol 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.900</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.900</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Suero Costeño" data-categoria="mantequilla" data-precio="6200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Suero" alt="Suero Costeño"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Suero Costeño 250g', 6200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Suero Costeño Tradicional 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$6.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $6.200</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- HELADOS -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Helado Vainilla" data-categoria="helados" data-precio="14000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Helado+Vainilla"
+                            alt="Helado Vainilla" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Helado Vainilla 1L', 14000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Crem Helado</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Helado de Vainilla 1000ml</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$14.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $14.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Paleta de Agua" data-categoria="helados" data-precio="2000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Paleta" alt="Paleta de Agua"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Paleta de Agua Limón', 2000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Popsy</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Paleta de Agua Sabor Limón</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$2.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $2.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Copa Helado" data-categoria="helados" data-precio="4500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Copa" alt="Copa de Helado"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Copa Helado Chocolate', 4500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Crem Helado</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Copa de Helado Chocolate 150ml</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Helado Brownie" data-categoria="helados" data-precio="16500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Helado+Brownie"
+                            alt="Helado Brownie" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Helado Vainilla Brownie 1L', 16500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Popsy</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Helado Gourmet Vainilla Brownie</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$16.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $16.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- POSTRES -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Gelatina" data-categoria="postres" data-precio="1500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Gelatina" alt="Gelatina"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Gelatina Roja Vaso', 1500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Gelatina Rica</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Gelatina de Fresa en Vaso</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$1.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $1.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Flan de Caramelo" data-categoria="postres" data-precio="3800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Flan" alt="Flan"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Flan de Caramelo 120g', 3800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Alpina</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Flan de Caramelo Individual</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Arroz con Leche" data-categoria="postres" data-precio="4200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Arroz+Leche"
+                            alt="Arroz con Leche" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Arroz con Leche 200g', 4200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Casero</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Arroz con Leche Casero 200g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.200</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.200</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Arequipe" data-categoria="postres" data-precio="5500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Arequipe" alt="Arequipe"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Arequipe Familiar 250g', 5500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Alpina</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Arequipe Tradicional 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$5.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $5.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- BEBIDAS EN POLVO -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Chocolate Polvo" data-categoria="bebidas-polvo" data-precio="12000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Choco+Listo" alt="Choco Listo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Choco Listo 500g', 12000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Choco Listo</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Chocolate en Polvo Fortificado 500g
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$12.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $12.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Café Instantáneo" data-categoria="bebidas-polvo" data-precio="8500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Cafe" alt="Café Instantáneo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Café Instantáneo 170g', 8500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Nescafé</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Café Clásico Frasco 170g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$8.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $8.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Refresco Polvo" data-categoria="bebidas-polvo" data-precio="1000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Frutiño" alt="Frutiño"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Refresco Frutiño Lulo', 1000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Frutiño</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Refresco en Polvo Sabor Lulo</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$1.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $1.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Avena Polvo" data-categoria="bebidas-polvo" data-precio="7500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Avena" alt="Avena"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Avena en Polvo 400g', 7500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Quaker</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Avena Molida en Polvo 400g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$7.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $7.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- FRUTAS (NUEVOS) -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Manzanas Rojas" data-categoria="frutas" data-precio="3500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Manzanas" alt="Manzanas"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Manzanas Rojas 1kg', 3500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Frutas Frescas</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Manzanas Rojas Frescas 1 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.500</p>
+                    <p class="text-xs text-gray-400">Gramos a $3.50</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Bananos" data-categoria="frutas" data-precio="2800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Bananos" alt="Bananos"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Bananos 1kg', 2800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Frutas Frescas</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Bananos Maduros 1 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$2.800</p>
+                    <p class="text-xs text-gray-400">Gramos a $2.80</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Naranjas" data-categoria="frutas" data-precio="3200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Naranjas" alt="Naranjas"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Naranjas Valencia 1kg', 3200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Frutas Frescas</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Naranjas Valencia Jugosas 1 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.200</p>
+                    <p class="text-xs text-gray-400">Gramos a $3.20</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Fresas" data-categoria="frutas" data-precio="4500">
+                    <div
+                        class="absolute top-3 left-3 bg-red-400 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
+                        Temporada</div>
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Fresas" alt="Fresas"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Fresas Frescas 500g', 4500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Fresas Frescas de Temporada 500g
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.500</p>
+                    <p class="text-xs text-gray-400">Gramos a $9.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- VERDURAS (NUEVOS) -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Tomate Chonto" data-categoria="verduras" data-precio="2500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Tomate" alt="Tomate"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Tomate Chonto 1kg', 2500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Verduras Frescas</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Tomate Chonto Maduro 1 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$2.500</p>
+                    <p class="text-xs text-gray-400">Gramos a $2.50</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Papa Pastusa" data-categoria="verduras" data-precio="3000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Papa" alt="Papa"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Papa Pastusa 2kg', 3000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Verduras Frescas</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Papa Pastusa Seleccionada 2 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $1.50</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Cebolla Cabezona" data-categoria="verduras" data-precio="2200">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Cebolla" alt="Cebolla"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Cebolla Cabezona 1kg', 2200)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Verduras Frescas</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Cebolla Cabezona Blanca 1 Kg</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$2.200</p>
+                    <p class="text-xs text-gray-400">Gramos a $2.20</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Espinaca" data-categoria="verduras" data-precio="1900">
+                    <div
+                        class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
+                        Orgánica</div>
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Espinaca" alt="Espinaca"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Espinaca Fresca 500g', 1900)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Espinaca Fresca Bolsa 500g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$1.900</p>
+                    <p class="text-xs text-gray-400">Gramos a $3.80</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- LECHE (NUEVOS) -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Leche Entera Alquería" data-categoria="leche" data-precio="3800">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Leche+Entera"
+                            alt="Leche Entera" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Leche Entera Alquería 1L', 3800)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Alquería</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Leche Entera Larga Vida 1L</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$3.800</p>
+                    <p class="text-xs text-gray-400">Unidades a $3.800</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Leche Descremada" data-categoria="leche" data-precio="4000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Leche+Light"
+                            alt="Leche Descremada" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Leche Descremada 1L', 4000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Leche Descremada Deslactosada 1L
+                    </p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$4.000</p>
+                    <p class="text-xs text-gray-400">Unidades a $4.000</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Leche en Polvo" data-categoria="leche" data-precio="18500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Leche+Polvo"
+                            alt="Leche en Polvo" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Leche en Polvo 400g', 18500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Klim</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Leche en Polvo Entera 400g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$18.500</p>
+                    <p class="text-xs text-gray-400">Unidades a $18.500</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- QUESOS (NUEVOS) -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Queso Campesino" data-categoria="queso" data-precio="9500">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Queso+Campesino"
+                            alt="Queso Campesino" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Queso Campesino 250g', 9500)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Queso Campesino Fresco 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$9.500</p>
+                    <p class="text-xs text-gray-400">Gramos a $38.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Queso Mozarella" data-categoria="queso" data-precio="14000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Mozarella"
+                            alt="Queso Mozarella" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Queso Mozarella 250g', 14000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Alpina</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Queso Mozarella Rallado 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$14.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $56.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                    data-nombre="Queso Doble Crema" data-categoria="queso" data-precio="11000">
+                    <div class="relative mb-3">
+                        <img src="https://via.placeholder.com/200x200/f3f4f6/94a3b8?text=Doble+Crema"
+                            alt="Queso Doble Crema" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Queso Doble Crema 250g', 11000)"
+                            class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Queso Doble Crema Tajado 250g</p>
+                    <p class="text-blue-500 font-bold text-base mt-auto">$11.000</p>
+                    <p class="text-xs text-gray-400">Gramos a $44.00</p>
+                    <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        </svg>
+                        35 mins
+                    </div>
+                    <button class="absolute top-3 right-14 text-gray-300 hover:text-red-400 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Mensaje sin resultados -->
+            <div id="sin-resultados" class="hidden text-center py-20 text-gray-400">
+                <svg class="w-16 h-16 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p class="text-lg font-semibold">Sin resultados</p>
+                <p class="text-sm mt-1">No hay productos en esta categoría aún.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- PANEL LATERAL DEL CARRITO -->
+    <div id="panel-carrito"
+        class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+
+        <!-- Header del panel -->
+        <div class="bg-blue-500 text-white px-6 py-4 flex justify-between items-center">
+            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd"
+                    d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                    clip-rule="evenodd" />
+            </svg>
+            <h2 class="text-lg font-bold "> Mi Carrito</h2>
+            <button onclick="cerrarCarrito()"
+                class="text-white hover:text-blue-200 text-2xl font-bold transition">✕</button>
+        </div>
+
+        <!-- Lista de productos -->
+        <ul id="lista-carrito" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <p class="text-gray-400 text-sm text-center mt-10">Tu carrito está vacío</p>
+        </ul>
+
+        <!-- Footer con total y botón -->
+        <div class="border-t border-gray-200 px-6 py-4 space-y-3">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600 font-semibold">Total:</span>
+                <span class="text-blue-600 font-extrabold text-xl">$<span id="total">0</span></span>
+            </div>
+            <button onclick="confirmarCompra()"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
+                Confirmar compra
+            </button>
+        </div>
+    </div>
+
+    <!-- Fondo oscuro detrás del panel -->
+    <div id="overlay-carrito"
+        class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-40"
+        onclick="cerrarCarrito()"></div>
+
+
+    <!-- MODAL INICIAR SESIÓN -->
+    <div id="modal-login" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+
+        <!-- Fondo oscuro -->
+        <div class="absolute inset-0 bg-black opacity-50" onclick="cerrarLogin()"></div>
+
+        <!-- Contenido del modal -->
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+
+            <!-- Header -->
+            <div class="bg-blue-500 px-8 py-6 text-white text-center">
+                <img src="images/logo.svg" alt="MercaBlue" class="h-10 mx-auto mb-2">
+                <h2 class="text-xl font-bold">Bienvenido a MercaBlue</h2>
+            </div>
+
+            <!-- Tabs: Iniciar sesión / Registrarse -->
+            <div class="flex border-b border-gray-200">
+                <button id="tab-login" onclick="mostrarTab('login')"
+                    class="flex-1 py-3 text-sm font-semibold text-blue-500 border-b-2 border-blue-500 transition">
+                    Iniciar Sesión
+                </button>
+                <button id="tab-registro" onclick="mostrarTab('registro')"
+                    class="flex-1 py-3 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-blue-400 transition">
+                    Crear Cuenta
+                </button>
+            </div>
+
+            <div class="px-8 py-6">
+
+                <!-- FORMULARIO LOGIN -->
+                <div id="form-login">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                            <input type="email" id="login-email" placeholder="tu@email.com"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Contraseña</label>
+                            <input type="password" id="login-password" placeholder="••••••••"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <button onclick="iniciarSesion()"
+                            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition mt-2">
+                            Iniciar Sesión
+                        </button>
+                        <p class="text-center text-gray-400 text-xs">
+                            ¿No tienes cuenta?
+                            <span onclick="mostrarTab('registro')"
+                                class="text-blue-500 font-semibold cursor-pointer hover:underline">
+                                Regístrate gratis
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FORMULARIO REGISTRO -->
+                <div id="form-registro" class="hidden">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-gray-600 text-sm font-medium">Nombre</label>
+                                <input type="text" id="nombre" placeholder="Juan"
+                                    class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                            </div>
+                            <div>
+                                <label class="text-gray-600 text-sm font-medium">Apellido</label>
+                                <input type="text" id="apellido" placeholder="Pérez"
+                                    class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                            <input type="email" id="email" placeholder="tu@email.com"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Teléfono</label>
+                            <input type="tel" id="telefono" placeholder="300 000 0000"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-gray-600 text-sm font-medium">Contraseña</label>
+                            <input type="password" id="password" placeholder="Mínimo 6 caracteres"
+                                class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <button onclick="validarFormulario()"
+                            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
+                            Crear Cuenta
+                        </button>
+                        <p class="text-center text-gray-400 text-xs">
+                            ¿Ya tienes cuenta?
+                            <span onclick="mostrarTab('login')"
+                                class="text-blue-500 font-semibold cursor-pointer hover:underline">
+                                Inicia sesión
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>

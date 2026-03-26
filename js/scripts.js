@@ -179,6 +179,110 @@ function validarFormulario() {
     alert('¡Registro exitoso!');
     return true;
 }
+
+// ═══════════════════════════════════════
+// SLIDER DE OFERTAS
+// ═══════════════════════════════════════
+let slideActual = 0;
+const totalSlides = 3;
+
+function actualizarSlider() {
+    const slider = document.getElementById('slider');
+    if (!slider) return;
+    slider.style.transform = `translateX(-${slideActual * 100}%)`;
+
+    for (let i = 0; i < totalSlides; i++) {
+        const punto = document.getElementById(`punto-${i}`);
+        if (punto) punto.classList.toggle('opacity-50', i !== slideActual);
+    }
+}
+
+function cambiarSlide(direccion) {
+    slideActual = (slideActual + direccion + totalSlides) % totalSlides;
+    actualizarSlider();
+}
+
+function irASlide(indice) {
+    slideActual = indice;
+    actualizarSlider();
+}
+
+setInterval(() => cambiarSlide(1), 4000);
+
+// ═══════════════════════════════════════
+// MODAL LOGIN / REGISTRO
+// ═══════════════════════════════════════
+function abrirLogin() {
+    document.getElementById('modal-login').classList.remove('hidden');
+    mostrarTab('login');
+}
+
+function cerrarLogin() {
+    document.getElementById('modal-login').classList.add('hidden');
+}
+
+function mostrarTab(tab) {
+    const formLogin    = document.getElementById('form-login');
+    const formRegistro = document.getElementById('form-registro');
+    const tabLogin     = document.getElementById('tab-login');
+    const tabRegistro  = document.getElementById('tab-registro');
+
+    if (tab === 'login') {
+        formLogin.classList.remove('hidden');
+        formRegistro.classList.add('hidden');
+        tabLogin.classList.add('text-blue-500', 'border-blue-500');
+        tabLogin.classList.remove('text-gray-400', 'border-transparent');
+        tabRegistro.classList.add('text-gray-400', 'border-transparent');
+        tabRegistro.classList.remove('text-blue-500', 'border-blue-500');
+    } else {
+        formRegistro.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+        tabRegistro.classList.add('text-blue-500', 'border-blue-500');
+        tabRegistro.classList.remove('text-gray-400', 'border-transparent');
+        tabLogin.classList.add('text-gray-400', 'border-transparent');
+        tabLogin.classList.remove('text-blue-500', 'border-blue-500');
+    }
+}
+
+function iniciarSesion() {
+    let email = document.getElementById('login-email').value;
+    let pass  = document.getElementById('login-password').value;
+
+    if (!email || !pass) {
+        alert('Completa todos los campos');
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert('Email inválido');
+        return;
+    }
+
+    // 🔥 SIMULACIÓN DE ROLES
+    let rol = "cliente";
+
+    if (email === "admin@mercablue.com") {
+        rol = "admin";
+    }
+
+    // Guardamos el rol
+    localStorage.setItem("rol", rol);
+
+    // Mostrar botón si es admin
+    mostrarBotonVentas();
+
+    alert('¡Bienvenido a MercaBlue!');
+    cerrarLogin();
+}
+
+function mostrarBotonVentas() {
+    let rol = localStorage.getItem("rol");
+
+    if (rol === "admin") {
+        document.getElementById("btn-ventas").classList.remove("hidden");
+    }
+}
+
 // =============================================
 //  TOAST (requerido por buscador y suscripción)
 // =============================================
@@ -204,12 +308,14 @@ function mostrarToast(mensaje) {
     }, 3000);
 }
 
-
 // =============================================
-//  BUSCADOR + SUSCRIPCIÓN (DOMContentLoaded unificado)
+//  BUSCADOR + SUSCRIPCIÓN + LOGIN (DOMContentLoaded unificado)
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Rol admin ---
+    mostrarBotonVentas();
 
     // --- Buscador ---
     const inputBuscar = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
@@ -251,7 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-
 // =============================================
 //  FUNCIONES DEL BUSCADOR
 // =============================================
@@ -292,7 +397,6 @@ function filtrarProductosEnPagina(termino) {
     );
 }
 
-
 // =============================================
 //  FUNCIÓN DE SUSCRIPCIÓN
 // =============================================
@@ -327,3 +431,97 @@ function enviarSuscripcion() {
 
     mostrarToast('📧 ¡Suscripción exitosa! Revisa tu correo pronto');
 }
+     // ═══════════════════════════════════════
+        // SIDEBAR: toggle categorías
+        // ═══════════════════════════════════════
+        function toggleCategoria(id) {
+            const sub = document.getElementById('sub-' + id);
+            const dot = document.getElementById('dot-' + id);
+            const estaAbierto = !sub.classList.contains('hidden');
+
+            // Cerrar todos
+            document.querySelectorAll('[id^="sub-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="dot-"]').forEach(el => {
+                el.classList.remove('bg-blue-500');
+                el.classList.add('border-gray-300');
+                el.classList.remove('border-blue-500');
+            });
+
+            if (!estaAbierto) {
+                sub.classList.remove('hidden');
+                dot.classList.add('bg-blue-500', 'border-blue-500');
+                dot.classList.remove('border-gray-300');
+            }
+        }
+
+        // ═══════════════════════════════════════
+        // SIDEBAR: filtrar por subcategoría
+        // ═══════════════════════════════════════
+        function filtrarSubcategoria(categoria) {
+            const productos = document.querySelectorAll('.producto');
+            let encontrados = 0;
+
+            productos.forEach(p => {
+                const cat = p.getAttribute('data-categoria');
+                const visible = cat === categoria;
+                p.style.display = visible ? '' : 'none';
+                if (visible) encontrados++;
+            });
+
+            document.getElementById('sin-resultados').classList.toggle('hidden', encontrados > 0);
+
+            // Actualizar título y breadcrumb
+            const nombres = {
+                'alimentos': 'Alimentos',
+                'alimentos-basicos': 'Alimentos Básicos',
+                'cafe-te': 'Café, Té e Infusiones',
+                'cereales': 'Cereales',
+                'charcuteria': 'Charcutería',
+                'enlatados': 'Enlatados',
+                'helados': 'Helados',
+                'postres': 'Postres',
+                'sopas': 'Sopas, Salsas y Aderezos',
+                'yogurt': 'Yogurt',
+                'bebidas': 'Bebidas',
+                'bebidas-liquidas': 'Bebidas Líquidas',
+                'bebidas-polvo': 'Bebidas en Polvo',
+                'frutas': 'Frutas',
+                'verduras': 'Verduras',
+                'hierbas': 'Hierbas y Especias',
+                'res': 'Res',
+                'pollo': 'Pollo',
+                'pescado': 'Pescado y Mariscos',
+                'cerdo': 'Cerdo',
+                'leche': 'Leche',
+                'queso': 'Quesos',
+                'huevos': 'Huevos',
+                'mantequilla': 'Mantequilla y Crema',
+                'detergentes': 'Detergentes',
+                'desinfectantes': 'Desinfectantes',
+                'papel': 'Papel y Servilletas',
+                'higiene': 'Higiene',
+                'cabello': 'Cabello',
+                'skincare': 'Cuidado de la Piel',
+            };
+
+            const nombre = nombres[categoria] || categoria;
+            document.getElementById('titulo-seccion').textContent = nombre;
+            document.getElementById('breadcrumb').innerHTML = `
+                <a href="/index.html" class="hover:text-blue-500 transition">Inicio</a>
+                <span class="mx-1">/</span>
+                <span class="hover:text-blue-500 transition cursor-pointer" onclick="mostrarTodos()">Productos</span>
+                <span class="mx-1">/</span>
+                <span class="text-blue-500 font-medium">${nombre}</span>
+            `;
+        }
+
+        function mostrarTodos() {
+            document.querySelectorAll('.producto').forEach(p => p.style.display = '');
+            document.getElementById('sin-resultados').classList.add('hidden');
+            document.getElementById('titulo-seccion').textContent = 'Todos los Productos';
+            document.getElementById('breadcrumb').innerHTML = `
+                <a href="/index.html" class="hover:text-blue-500 transition">Inicio</a>
+                <span class="mx-1">/</span>
+                <span class="text-blue-500 font-medium">Todos los Productos</span>
+            `;
+        }
