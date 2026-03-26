@@ -158,25 +158,48 @@ function filtrarPrecio(maxPrecio) {
 // ═══════════════════════════════════════
 // VALIDACIÓN FORMULARIO DE REGISTRO
 // ═══════════════════════════════════════
-function validarFormulario() {
+function validarFormulario(event) {
+    if (event) event.preventDefault();
+    
+    let form = document.getElementById('form-registro');
     let nombre = document.getElementById('nombre').value;
     let email = document.getElementById('email').value;
     let pass = document.getElementById('password').value;
 
     if (!nombre || !email || !pass) {
-        alert('Todos los campos son obligatorios');
+        mostrarToast('⚠️ Todos los campos son obligatorios');
         return false;
     }
     if (!email.includes('@')) {
-        alert('Email inválido');
+        mostrarToast('⚠️ Email inválido');
         return false;
     }
     if (pass.length < 6) {
-        alert('La contraseña debe tener mínimo 6 caracteres');
+        mostrarToast('⚠️ La contraseña debe tener mínimo 6 caracteres');
         return false;
     }
 
-    alert('¡Registro exitoso!');
+    // Enviar datos al PHP
+    let formData = new FormData(form);
+    fetch('php/registro.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        if (data.includes('correctamente')) {
+            mostrarToast('✅ ' + data);
+            form.reset();
+            mostrarTab('login');
+        } else {
+            mostrarToast('❌ ' + data);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        mostrarToast('❌ Error al conectar con el servidor');
+    });
+
     return true;
 }
 
@@ -244,35 +267,105 @@ function mostrarTab(tab) {
     }
 }
 
-function iniciarSesion() {
+// ═══════════════════════════════════════
+// NOTIFICACIONES Y SESIÓN
+// ═══════════════════════════════════════
+
+// Muestra mensaje en el modal: tipo 'error' o 'exito'
+function mostrarMensaje(formulario, tipo, texto) {
+    const div = document.getElementById('msg-' + formulario);
+    if (!div) return;
+    
+    div.classList.remove('hidden', 'bg-red-100', 'text-red-600', 'bg-green-100', 'text-green-600');
+
+    if (tipo === 'error') {
+        div.classList.add('bg-red-100', 'text-red-600');
+    } else {
+        div.classList.add('bg-green-100', 'text-green-600');
+    }
+
+    div.textContent = texto;
+    div.classList.remove('hidden');
+}
+
+// Llama esto cuando el login sea exitoso
+function loginExitoso(nombre, rol = 'cliente') {
+    // Guarda los datos en el navegador
+    localStorage.setItem('usuario', nombre);
+    localStorage.setItem('rol', rol);
+
+    // Actualiza el header
+    const textoUsuario = document.getElementById('texto-usuario');
+    const btnLogin = document.getElementById('btn-login');
+    
+    if (textoUsuario) textoUsuario.textContent = '¡Hola, ' + nombre + '!';
+    if (btnLogin) btnLogin.onclick = confirmarCerrarSesion; // Cambia a logout
+
+    // Mostrar botón de ventas si es admin
+    if (rol === 'admin') {
+        const btnVentas = document.getElementById('btn-ventas');
+        if (btnVentas) btnVentas.classList.remove('hidden');
+    }
+
+    // Cierra el modal tras un breve retraso
+    setTimeout(() => cerrarLogin(), 1000);
+}
+
+/**
+ * Pregunta al usuario si desea salir antes de borrar la sesión.
+ */
+function confirmarCerrarSesion() {
+    if (confirm('¿Quieres cerrar sesión?')) {
+        cerrarSesion();
+    }
+}
+
+/**
+ * Borra los datos del navegador y recarga la página para resetear la UI.
+ */
+function cerrarSesion() {
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('rol');
+    location.reload();
+}
+
+function iniciarSesion(event) {
+    if (event) event.preventDefault();
+
+    let form = document.getElementById('form-login');
     let email = document.getElementById('login-email').value;
     let pass  = document.getElementById('login-password').value;
 
     if (!email || !pass) {
-        alert('Completa todos los campos');
+        mostrarToast('⚠️ Completa todos los campos');
         return;
     }
 
     if (!email.includes('@')) {
-        alert('Email inválido');
+        mostrarToast('⚠️ Email inválido');
         return;
     }
 
-    // 🔥 SIMULACIÓN DE ROLES
-    let rol = "cliente";
-
-    if (email === "admin@mercablue.com") {
-        rol = "admin";
-    }
-
-    // Guardamos el rol
-    localStorage.setItem("rol", rol);
-
-    // Mostrar botón si es admin
-    mostrarBotonVentas();
-
-    alert('¡Bienvenido a MercaBlue!');
-    cerrarLogin();
+    // Enviar datos al PHP
+    let formData = new FormData(form);
+    fetch('php/login.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const nombre = data.message.replace('Bienvenido ', '');
+            mostrarMensaje('login', 'exito', '✅ ' + data.message);
+            loginExitoso(nombre, data.rol);
+        } else {
+            mostrarMensaje('login', 'error', '❌ ' + data.message);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        mostrarMensaje('login', 'error', '❌ Error de conexión');
+    });
 }
 
 function mostrarBotonVentas() {
@@ -314,8 +407,21 @@ function mostrarToast(mensaje) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Rol admin ---
-    mostrarBotonVentas();
+    // --- Sesión Persistente ---
+    const nombreGuardado = localStorage.getItem('usuario');
+    const rolGuardado = localStorage.getItem('rol');
+    
+    if (nombreGuardado) {
+        const textoUsuario = document.getElementById('texto-usuario');
+        const btnLogin = document.getElementById('btn-login');
+        if (textoUsuario) textoUsuario.textContent = '¡Hola, ' + nombreGuardado + '!';
+        if (btnLogin) btnLogin.onclick = confirmarCerrarSesion;
+        
+        if (rolGuardado === 'admin') {
+            const btnVentas = document.getElementById('btn-ventas');
+            if (btnVentas) btnVentas.classList.remove('hidden');
+        }
+    }
 
     // --- Buscador ---
     const inputBuscar = document.querySelector('input[placeholder="Busca tu producto aquí..."]');
@@ -353,6 +459,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 enviarSuscripcion();
             });
         }
+    }
+
+    // --- Formulario de Login ---
+    const formLogin = document.getElementById('form-login');
+    if (formLogin) {
+        formLogin.addEventListener('submit', iniciarSesion);
+    }
+
+    // --- Formulario de Registro ---
+    const formRegistro = document.getElementById('form-registro');
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', validarFormulario);
     }
 
 });

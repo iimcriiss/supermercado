@@ -22,20 +22,29 @@
                 <img src="images/logo.svg" alt="Logo MercaBlue" class="w-40 h-full transform scale-125 origin-left">
             </a>
 
-            <!-- Buscador central -->
+            <!-- Buscador central: Permite filtrar por texto y categoría desde el Home -->
             <div class="flex items-center bg-white rounded-full overflow-hidden w-[560px] shadow-md">
-                <select
+                <select id="filtro-categoria"
                     class="text-gray-500 text-sm px-4 py-2.5 bg-white border-r border-gray-200 outline-none cursor-pointer">
+<<<<<<< HEAD
                     <option>Categorías</option>
                     <option>Frutas</option>
                     <option>Verduras</option>
                     <option>Lácteos</option>
                     <option>Bebidas</option>
                     <option>Carnes</option>
+=======
+                    <option value="">Categorías</option>
+                    <option value="frutas">Frutas</option>
+                    <option value="verduras">Verduras</option>
+                    <option value="lacteos">Lácteos</option>
+                    <option value="bebidas">Bebidas</option>
+                    <option value="carnes">Carnes</option>
+>>>>>>> 1987cd94a3cc928e8b732c1ec093c4cf1452e05c
                 </select>
-                <input type="text" placeholder="Busca tu producto aquí..."
+                <input id="input-busqueda" type="text" placeholder="Busca tu producto aquí..."
                     class="flex-1 text-gray-600 text-sm px-4 py-2.5 outline-none">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
+                <button id="btn-buscar" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
                     Buscar
                 </button>
             </div>
@@ -43,7 +52,7 @@
             <!-- Acciones: usuario + carrito -->
             <div class="flex items-center gap-8">
 
-                <!-- Ventas (Solo admin)-->
+                <!-- Ventas: Visible solo para administradores (se controla desde JS) -->
                 <a id="btn-ventas" href="#" class="hidden flex items-center gap-2 hover:text-blue-200 transition">
                     <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
                         <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
@@ -57,9 +66,16 @@
                 </a>
 
 
+<<<<<<< HEAD
                 <!-- Iniciar sesión -->
                 <a onclick="abrirLogin()" id="btn-login"
                     class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+=======
+                <!-- Botón de Usuario: 
+                     Si no hay sesión: Abre el modal de Login.
+                     Si hay sesión: Muestra "¡Hola, Nombre!" y permite cerrar sesión. -->
+                <a onclick="abrirLogin()" id="btn-login" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+>>>>>>> 1987cd94a3cc928e8b732c1ec093c4cf1452e05c
                     <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd"
                             d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
@@ -372,6 +388,7 @@
 
             <div class="grid grid-cols-4 gap-6">
 
+<<<<<<< HEAD
                 <!-- Alimentos y Bebidas -->
                 <a href="productos.html"
                     class="flex flex-col items-center gap-3 p-8 bg-orange-50 rounded-2xl hover:bg-orange-100 hover:shadow-md transition group">
@@ -434,6 +451,43 @@
                         class="text-gray-700 font-semibold text-sm group-hover:text-yellow-500 transition text-center">Lácteos
                         y Huevos</span>
                 </a>
+=======
+        <!-- Alimentos y Bebidas -->
+        <a href="productos.html?categoria=alimentos"
+            class="flex flex-col items-center gap-3 p-8 bg-orange-50 rounded-2xl hover:bg-orange-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2v6a6 6 0 0 0 12 0V2"/><path d="M12 2v6"/><path d="M6 8h12"/><path d="M4 22h16"/><path d="M9 14v8"/><path d="M15 14v8"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-orange-500 transition text-center">Alimentos y Bebidas</span>
+        </a>
+
+        <!-- Frutas y Verduras -->
+        <a href="productos.html?categoria=frutas"
+            class="flex flex-col items-center gap-3 p-8 bg-green-50 rounded-2xl hover:bg-green-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22c4.97 0 9-4.03 9-9c0-3.87-2.44-7.17-5.93-8.44"/><path d="M3.5 9.56C3.18 10.33 3 11.14 3 12a9 9 0 0 0 9 9"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M15 5.5C13.5 3.5 11 2 8 2c0 3 1.5 5.5 3.5 7.5"/><path d="M12 22V12"/><path d="M12 12C10 9.5 7 8 4 8c0 4 2 7 5 9"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-green-500 transition text-center">Frutas y Verduras</span>
+        </a>
+
+        <!-- Carnes y Pescados -->
+        <a href="productos.html?categoria=carnes"
+            class="flex flex-col items-center gap-3 p-8 bg-red-50 rounded-2xl hover:bg-red-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m13.62 8.382l1.966-1.967A2 2 0 1 1 19 5a2 2 0 1 1-1.413 3.414l-1.82 1.821m-9.863 8.361c2.733 2.734 5.9 4 7.07 2.829c1.172-1.172-.094-4.338-2.828-7.071c-2.733-2.734-5.9-4-7.07-2.829c-1.172 1.172.094 4.338 2.828 7.071z"/><path d="M12.975 21.425c3.905-3.906 4.855-9.288 2.121-12.021c-2.733-2.734-8.115-1.784-12.02 2.121"/><path d="M7.5 16l1 1"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-red-500 transition text-center">Carnes y Pescados</span>
+        </a>
+
+        <!-- Lácteos y Huevos -->
+        <a href="productos.html?categoria=lacteos"
+            class="flex flex-col items-center gap-3 p-8 bg-yellow-50 rounded-2xl hover:bg-yellow-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a7 7 0 0 0-7 7c0 4 3 7 7 9c4-2 7-5 7-9a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-yellow-500 transition text-center">Lácteos y Huevos</span>
+        </a>
+>>>>>>> 1987cd94a3cc928e8b732c1ec093c4cf1452e05c
 
             </div>
         </section>
@@ -623,27 +677,34 @@
         <div class="px-8 py-6">
 
             <!-- FORMULARIO LOGIN -->
-            <div id="form-login">
+            <form id="form-login" action="php/login.php" method="POST">
                 <div class="space-y-4">
                     <div>
                         <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
-                        <input type="email" id="login-email" placeholder="tu@email.com"
+                        <input type="email" id="login-email" name="email" placeholder="tu@email.com" required
                             class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                     </div>
                     <div>
                         <label class="text-gray-600 text-sm font-medium">Contraseña</label>
-                        <input type="password" id="login-password" placeholder="••••••••"
+                        <input type="password" id="login-password" name="password" placeholder="••••••••" required
                             class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                     </div>
+<<<<<<< HEAD
 
                     <!-- MENSAJE LOGIN -->
                     <div id="msg-login" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
 
                     <button onclick="iniciarSesion()"
+=======
+                    <!-- Contenedor para mensajes de error o éxito del Login -->
+                    <div id="msg-login" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
+
+                    <button type="submit"
+>>>>>>> 1987cd94a3cc928e8b732c1ec093c4cf1452e05c
                         class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition mt-2">
                         Iniciar Sesión
                     </button>
-                    <p class="text-center text-gray-400 text-xs">
+                    <p class="text-center text-gray-400 text-xs mt-2">
                         ¿No tienes cuenta?
                         <span onclick="mostrarTab('registro')"
                             class="text-blue-500 font-semibold cursor-pointer hover:underline">
@@ -651,43 +712,50 @@
                         </span>
                     </p>
                 </div>
-            </div>
+            </form>
 
             <!-- FORMULARIO REGISTRO -->
-            <div id="form-registro" class="hidden">
+            <form id="form-registro" action="php/registro.php" method="POST" class="hidden">
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Nombre</label>
-                            <input type="text" id="nombre" placeholder="Juan"
+                            <input type="text" id="nombre" name="nombre" placeholder="Juan" required
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Apellido</label>
-                            <input type="text" id="apellido" placeholder="Pérez"
+                            <input type="text" id="apellido" name="apellido" placeholder="Pérez" required
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
                     </div>
                     <div>
                         <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
-                        <input type="email" id="email" placeholder="tu@email.com"
+                        <input type="email" id="email" name="email" placeholder="tu@email.com" required
                             class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                     </div>
                     <div>
                         <label class="text-gray-600 text-sm font-medium">Teléfono</label>
-                        <input type="tel" id="telefono" placeholder="300 000 0000"
+                        <input type="tel" id="telefono" name="telefono" placeholder="300 000 0000"
                             class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                     </div>
                     <div>
                         <label class="text-gray-600 text-sm font-medium">Contraseña</label>
-                        <input type="password" id="password" placeholder="Mínimo 6 caracteres"
+                        <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required
                             class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                     </div>
 
+<<<<<<< HEAD
                     <!-- MENSAJE REGISTRO -->
                     <div id="msg-registro" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
 
                     <button onclick="validarFormulario()"
+=======
+                    <!-- Contenedor para mensajes de error o éxito del Registro -->
+                    <div id="msg-registro" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
+
+                    <button type="submit"
+>>>>>>> 1987cd94a3cc928e8b732c1ec093c4cf1452e05c
                         class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
                         Crear Cuenta
                     </button>
@@ -699,11 +767,44 @@
                         </span>
                     </p>
                 </div>
+<<<<<<< HEAD
             </div>
+=======
+            </form>
+
+>>>>>>> 1987cd94a3cc928e8b732c1ec093c4cf1452e05c
         </div>
     </div>
 </div>
     <script src="js/scripts.js"></script>
+    <!-- Lógica de búsqueda: Redirige al catálogo con los filtros seleccionados -->
+    <script>
+        /**
+         * Captura los valores del buscador y redirige a la página de productos
+         * enviando los criterios como parámetros en la URL (?busqueda=...&categoria=...)
+         */
+        function realizarBusqueda() {
+            const texto = document.getElementById('input-busqueda').value.trim();
+            const categoria = document.getElementById('filtro-categoria').value;
+            
+            let url = 'productos.html';
+            const params = [];
+            
+            if (texto) params.push(`busqueda=${encodeURIComponent(texto)}`);
+            if (categoria) params.push(`categoria=${encodeURIComponent(categoria)}`);
+            
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+            
+            window.location.href = url;
+        }
+
+        document.getElementById('btn-buscar').addEventListener('click', realizarBusqueda);
+        document.getElementById('input-busqueda').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') realizarBusqueda();
+        });
+    </script>
 </body>
 
 </html>
