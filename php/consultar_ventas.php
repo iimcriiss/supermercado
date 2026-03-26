@@ -14,6 +14,7 @@ try {
             v.id_venta,
             v.fecha,
             v.total,
+            v.estado,
             u.nombre        AS nombre_usuario,
             u.apellido      AS apellido_usuario,
             p.nombre        AS nombre_producto,
@@ -44,6 +45,7 @@ try {
             echo "Precio: $"  . $row['precio_unitario'] . " | ";
             echo "Subtotal: $". $row['subtotal']         . " | ";
             echo "Total: $"   . $row['total']            . " | ";
+            echo "Estado: "  . htmlspecialchars($row['estado']) . " | ";
             echo "Fecha: "    . $row['fecha']            . "<br>";
         }
     }
