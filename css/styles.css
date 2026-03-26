@@ -1,0 +1,31 @@
+ .categoria-activa {
+            color: #3b82f6;
+            font-weight: 700;
+        }
+        .subcategoria-activa {
+            color: #3b82f6;
+        }
+        .producto {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .producto:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .btn-agregar {
+            transition: transform 0.15s, background 0.15s;
+        }
+        .btn-agregar:hover {
+            transform: scale(1.1);
+        }
+        .sidebar-link {
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+        .sidebar-link:hover {
+            color: #3b82f6;
+        }
+        /* Scrollbar sidebar */
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
