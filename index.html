@@ -67,7 +67,8 @@
                 </a>
 
                 <!-- Carrito -->
-                <a onclick="abrirCarrito()" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                <a onclick="abrirCarrito()"
+                    class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
                     <div class="relative">
                         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd"
@@ -357,69 +358,53 @@
             </div>
         </section>
         <!-- CATEGORÍAS -->
-        <section class="py-16 px-20 bg-white">
-            <div class="mb-10">
-                <h2 class="text-3xl font-bold text-gray-800">
-                    Comprar por Categoría
-                </h2>
-                <p class="text-gray-500 mt-1">Encuentra lo que buscas más rápido</p>
-            </div>
+        <!-- CATEGORÍAS -->
+<section class="py-16 px-20 bg-white">
+    <div class="mb-10">
+        <h2 class="text-3xl font-bold text-gray-800">Comprar por Categoría</h2>
+        <p class="text-gray-500 mt-1">Encuentra lo que buscas más rápido</p>
+    </div>
 
-            <div class="grid grid-cols-6 gap-6">
-                <!-- Frutas -->
-                <a href="productos.html"
-                    class="flex flex-col items-center gap-3 p-6 bg-orange-50 rounded-2xl hover:bg-orange-100 hover:shadow-md transition group">
-                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="#f4d171"><g fill="none" stroke="#f4d171" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M12.831 6.333a2 2 0 0 1-1.663 0C6.1 4.018 2.5 6.608 2.5 13.25a9.76 9.76 0 0 0 9.5 10a9.76 9.76 0 0 0 9.5-10a10.35 10.35 0 0 0-1.286-5.535m-4.79-1.639c.186.185.434.305.73.352c.295.048.634.021.995-.077a4.3 4.3 0 0 0 1.11-.497c.37-.229.729-.514 1.054-.839s.61-.683.84-1.055s.397-.748.496-1.11c.098-.36.125-.699.078-.994a1.3 1.3 0 0 0-.353-.73a1.3 1.3 0 0 0-.73-.353a2.4 2.4 0 0 0-.995.078a4.3 4.3 0 0 0-1.11.496c-.371.23-.73.515-1.054.84s-.61.683-.84 1.054c-.23.372-.398.749-.496 1.11c-.099.36-.125.7-.078.995s.167.544.353.73M12 6.514V2.25"/><path d="M12 6.514a8.72 8.72 0 0 0-3.5 7.236a14.03 14.03 0 0 0 3.5 9.5"/></g>
-                    </svg>
-                    <span
-                        class="text-gray-700 font-semibold text-sm group-hover:text-orange-500 transition">Frutas</span>
-                </a>
+    <div class="grid grid-cols-4 gap-6">
 
-                <!-- Verduras -->
-                <a href="productos.html"
-                    class="flex flex-col items-center gap-3 p-6 bg-green-50 rounded-2xl hover:bg-green-100 hover:shadow-md transition group">
-                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 48 48" fill="#5be685"><g fill="#5be685" fill-rule="evenodd" clip-rule="evenodd"><path d="M22.965 9.163c-1.16-1.104-2.826-1.653-4.998-1.12a5.14 5.14 0 0 0-2.077-1.666c-1.336-.574-3.013-.562-4.904.525c-1.978.923-2.931 2.28-3.194 3.704c-.178.968-.023 1.886.232 2.61c-1.678 1.468-2.183 3.144-1.942 4.723c.209 1.366.955 2.533 1.687 3.325a4.1 4.1 0 0 0-.038 1.678c.31-.22.457-.322.794-.459c.55-.224 1-.25 1.5-.25c1.575 0 2.486.183 3.988.6a10 10 0 0 1 2.431 1.008l.284-.122a2 2 0 0 1 1.135-.136l3.513.607a14 14 0 0 1-.233-2.197a9.48 9.48 0 0 1 5.022-8.572a4.1 4.1 0 0 0-1.438-.972c-.23-1.053-.761-2.333-1.762-3.286m-9.826 1.117a1 1 0 0 1 1.34.453l.791 1.6l1.613-1.727a1 1 0 0 1 1.462 1.363l-2.127 2.278l.803 1.621l1.331-1.21a1 1 0 0 1 1.346 1.478l-1.755 1.595l1.056 2.134a1 1 0 0 1-1.793.886l-1.095-2.213l-1.964.397a1 1 0 0 1-.397-1.958l1.444-.292l-.796-1.607l-3.039.457a1 1 0 1 1-.298-1.976l2.406-.362l-.781-1.579a1 1 0 0 1 .453-1.338"/><path d="m24.136 24.695l-.508-.099a8 8 0 0 1-.394-1.523l-.015-.06c-.102-.417-.17-.784-.176-1.06a7.6 7.6 0 0 1 2.423-5.72q.092-.087.187-.151c2.015-1.8 4.833-2.113 7.015-.327c-.025-2.452.97-4.848 3.38-6.238l.845 1.462c-2.041 1.177-2.8 3.38-2.462 5.735c4.655-1.53 8.278 2.873 6.918 7.942a7.85 7.85 0 0 1-2.547 3.977l-.61-.213c-1.807-.627-4.082-1.386-5.9-1.887c-1.768-.488-4.043-.993-5.863-1.373a196 196 0 0 0-2.293-.465m13.418-4.709a1 1 0 0 1 1.172.79a5.06 5.06 0 0 1-1.803 4.95a.998.998 0 1 1-1.26-1.552a3.07 3.07 0 0 0 1.1-3.017a1 1 0 0 1 .79-1.17M10.236 41.998c3-.167 4.856-1.02 6-2.269c.455.61 1.218.964 2.044.834a119 119 0 0 0 3.098-.531v-4.685h2.23v4.254c2.82-.57 6.25-1.353 10.031-2.406v-2.961h2.23v2.32c1.523-.453 3.092-.948 4.691-1.488a2.034 2.034 0 0 0 0-3.891a137 137 0 0 0-11.38-3.293v6.352h-2.229v-6.877c-3.69-.838-6.71-1.37-8.671-1.68a2.12 2.12 0 0 0-2.044.835c-1.144-1.25-3-2.103-6-2.27a1.063 1.063 0 0 0-1.113 1.085c.026 1.813.137 3.253.515 4.376c-1.225.464-2.38 1.4-3.436 2.809c-.27.36-.27.857 0 1.217c1.047 1.397 2.193 2.33 3.406 2.797c-.322 1.09-.45 2.52-.483 4.384a1.063 1.063 0 0 0 1.11 1.088m2.199-10.972l-2.007.76c-.556.21-1.18.621-1.84 1.334c.653.706 1.271 1.116 1.822 1.328l1.918.739l-.582 1.969c-.171.58-.286 1.374-.347 2.488c2.15-.33 3.058-1.127 3.527-1.852c.675-1.043.878-2.565.878-4.672s-.203-3.628-.878-4.671c-.47-.726-1.38-1.523-3.533-1.854c.057 1.08.17 1.838.358 2.399z"/></g>
-                    </svg>
-                    <span
-                        class="text-gray-700 font-semibold text-sm group-hover:text-green-500 transition">Verduras</span>
-                </a>
+        <!-- Alimentos y Bebidas -->
+        <a href="productos.html"
+            class="flex flex-col items-center gap-3 p-8 bg-orange-50 rounded-2xl hover:bg-orange-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2v6a6 6 0 0 0 12 0V2"/><path d="M12 2v6"/><path d="M6 8h12"/><path d="M4 22h16"/><path d="M9 14v8"/><path d="M15 14v8"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-orange-500 transition text-center">Alimentos y Bebidas</span>
+        </a>
 
-                <!-- Lácteos -->
-                <a href="productos.html"
-                    class="flex flex-col items-center gap-3 p-6 bg-yellow-50 rounded-2xl hover:bg-yellow-100 hover:shadow-md transition group">
-                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14" fill="#ecee8c"><g fill="none" stroke="#ecee8c" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09.77L9 .75L.75 5.61A.47.47 0 0 0 .5 6v6.71a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-7A5.88 5.88 0 0 0 9.09.77ZM.59 5.75H13"/><path d="M.5 10.42h0l.08-.07A2 2 0 0 1 2 9.75a2 2 0 0 1 2 2a2 2 0 0 1-.59 1.41l-.08.09"/><circle cx="9" cy="9.25" r="1.5"/></g>
-                    </svg>
-                    <span
-                        class="text-gray-700 font-semibold text-sm group-hover:text-yellow-500 transition">Lácteos</span>
-                </a>
+        <!-- Frutas y Verduras -->
+        <a href="productos.html"
+            class="flex flex-col items-center gap-3 p-8 bg-green-50 rounded-2xl hover:bg-green-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22c4.97 0 9-4.03 9-9c0-3.87-2.44-7.17-5.93-8.44"/><path d="M3.5 9.56C3.18 10.33 3 11.14 3 12a9 9 0 0 0 9 9"/><path d="M12 2C6.48 2 2 6.48 2 12"/><path d="M15 5.5C13.5 3.5 11 2 8 2c0 3 1.5 5.5 3.5 7.5"/><path d="M12 22V12"/><path d="M12 12C10 9.5 7 8 4 8c0 4 2 7 5 9"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-green-500 transition text-center">Frutas y Verduras</span>
+        </a>
 
-                <!-- Bebidas -->
-                <a href="productos.html"
-                    class="flex flex-col items-center gap-3 p-6 bg-blue-50 rounded-2xl hover:bg-blue-100 hover:shadow-md transition group">
-                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14" fill="#94eaff"><g fill="none" stroke="#94eaff" stroke-linecap="round" stroke-linejoin="round"><path d="m11.5 6l-.89 6.62a1 1 0 0 1-1 .88H4.38a1 1 0 0 1-1-.88L2.5 6m8.23-2.32a1 1 0 0 0-1-.68H4.22a1 1 0 0 0-.95.68L2.5 6h9Z"/><path d="M8.5 3V1.5a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1V3"/></g>
-                    </svg>
-                    <span
-                        class="text-gray-700 font-semibold text-sm group-hover:text-blue-500 transition">Bebidas</span>
-                </a>
+        <!-- Carnes y Pescados -->
+        <a href="productos.html"
+            class="flex flex-col items-center gap-3 p-8 bg-red-50 rounded-2xl hover:bg-red-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m13.62 8.382l1.966-1.967A2 2 0 1 1 19 5a2 2 0 1 1-1.413 3.414l-1.82 1.821m-9.863 8.361c2.733 2.734 5.9 4 7.07 2.829c1.172-1.172-.094-4.338-2.828-7.071c-2.733-2.734-5.9-4-7.07-2.829c-1.172 1.172.094 4.338 2.828 7.071z"/><path d="M12.975 21.425c3.905-3.906 4.855-9.288 2.121-12.021c-2.733-2.734-8.115-1.784-12.02 2.121"/><path d="M7.5 16l1 1"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-red-500 transition text-center">Carnes y Pescados</span>
+        </a>
 
-                <!-- Carnes -->
-                <a href="productos.html"
-                    class="flex flex-col items-center gap-3 p-6 bg-red-50 rounded-2xl hover:bg-red-100 hover:shadow-md transition group">
-                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="#ff9494"><g fill="none" stroke="#ff9494" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m13.62 8.382l1.966-1.967A2 2 0 1 1 19 5a2 2 0 1 1-1.413 3.414l-1.82 1.821m-9.863 8.361c2.733 2.734 5.9 4 7.07 2.829c1.172-1.172-.094-4.338-2.828-7.071c-2.733-2.734-5.9-4-7.07-2.829c-1.172 1.172.094 4.338 2.828 7.071zM7.5 16l1 1"/><path d="M12.975 21.425c3.905-3.906 4.855-9.288 2.121-12.021c-2.733-2.734-8.115-1.784-12.02 2.121"/></g>
-                    </svg>
-                    <span class="text-gray-700 font-semibold text-sm group-hover:text-red-500 transition">Carnes</span>
-                </a>
+        <!-- Lácteos y Huevos -->
+        <a href="productos.html"
+            class="flex flex-col items-center gap-3 p-8 bg-yellow-50 rounded-2xl hover:bg-yellow-100 hover:shadow-md transition group">
+            <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a7 7 0 0 0-7 7c0 4 3 7 7 9c4-2 7-5 7-9a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <span class="text-gray-700 font-semibold text-sm group-hover:text-yellow-500 transition text-center">Lácteos y Huevos</span>
+        </a>
 
-                <!-- Panadería -->
-                <a href="productos.html"
-                    class="flex flex-col items-center gap-3 p-6 bg-amber-50 rounded-2xl hover:bg-amber-100 hover:shadow-md transition group">
-                    <svg class="w-16 h-auto" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 32 32" fill="#f5f170"><g fill="#f5f170"><path d="M7.5 14a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-2 1a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1ZM8 16.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM5.5 18a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm4.5-2.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0Zm1.5-.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm2.5 2.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM11.5 19a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-1.5.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM7.5 21a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-1.5.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0ZM9.5 24a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm2.5-1.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0Zm1.5-.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm.5 2.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0Z"/><path d="m27.716 26.542l-11.42 4.23a2.971 2.971 0 0 1-2.393.086l-9.366-3.68A4 4 0 0 1 2 23.455v-9.652l-.16-.24A5 5 0 0 1 1 10.788V9.386c0-1.402.938-2.516 2.146-2.878l11.091-4.182a5 5 0 0 1 3.526 0l9.35 3.52A6 6 0 0 1 31 11.46v.904c0 .998-.37 1.931-1 2.646v8.25a3.5 3.5 0 0 1-2.284 3.282ZM14.943 4.197L6.848 7.25l8.245 3.092a6.021 6.021 0 0 1 3.76 6.958l8.801-3.046A2 2 0 0 0 29 12.364v-.904a4 4 0 0 0-2.59-3.743l-9.352-3.52a3 3 0 0 0-2.115 0ZM18 28.007l9.021-3.34A1.5 1.5 0 0 0 28 23.26v-7.01l-10 3.462v8.296Zm-2.808 1.04l.298-.11a.995.995 0 0 0 .51-.872V19a1 1 0 0 1 .168-.555l.157-.235a4.02 4.02 0 0 0-1.934-5.995L4.35 8.45a.99.99 0 0 0-.593-.035l-.203.077V8.49A.996.996 0 0 0 3 9.386v1.403a3 3 0 0 0 .504 1.664l.328.492A1 1 0 0 1 4 13.5v9.955a2 2 0 0 0 1.269 1.862l9.365 3.68c.188.073.38.086.558.05Z"/></g>
-                    </svg>
-                    <span
-                        class="text-gray-700 font-semibold text-sm group-hover:text-amber-500 transition">Panadería</span>
-                </a>
-            </div>
-        </section>
+    </div>
+    </section>
     </main>
 
     <footer class="bg-gray-900 text-white pt-16 pb-8 px-20">
