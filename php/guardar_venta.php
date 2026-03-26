@@ -2,74 +2,82 @@
 session_start();
 require_once 'db.php';
 
-// 1. VERIFICAR que el usuario esté logueado
+// 1. VERIFICAR sesión (Importante: Cristopher, asegúrate que al loguear guardas el id_usuario)
 if (!isset($_SESSION['id_usuario'])) {
-    die("No autorizado");
+    http_response_code(401);
+    echo json_encode(["error" => "No autorizado. Por favor inicia sesión."]);
+    exit;
 }
 
 // 2. RECIBIR los datos JSON
-$data = json_decode(file_get_contents("php://input"), true);
+$json = file_get_contents("php://input");
+$data = json_decode($json, true);
 
-if (!$data || !is_array($data)) {
-    die("No hay datos de venta");
+// Validamos que la estructura contenga la lista de productos
+if (!$data || !isset($data['productos']) || !is_array($data['productos'])) {
+    echo json_encode(["error" => "No hay productos en el carrito"]);
+    exit;
 }
 
 try {
-    // 3. CALCULAR total y validar cada producto
-    $total = 0;
-    foreach ($data as $producto) {
-        $cantidad = (int)$producto['cantidad'];
-        $precio   = (float)$producto['precio'];
+    // Iniciamos una transacción para que si algo falla, no se guarde media venta
+    $pdo->beginTransaction();
 
-        if ($cantidad <= 0 || $precio <= 0) {
-            die("Datos de producto inválidos");
-        }
-
-        $total += $precio * $cantidad;
-    }
-
-    // 4. INSERTAR la venta con id_usuario de la sesión
+    // 3. INSERTAR la cabecera de la venta
+    // Usamos el total que viene del JS o lo recalculamos por seguridad
+    $total_venta = (float)$data['total']; 
     $id_usuario = $_SESSION['id_usuario'];
-    $stmt = $pdo->prepare("INSERT INTO ventas (id_usuario, total) VALUES (?, ?)");
-    $stmt->execute([$id_usuario, $total]);
 
-    // 5. OBTENER el id de la venta recién insertada
+    $stmt = $pdo->prepare("INSERT INTO ventas (id_usuario, total, fecha) VALUES (?, ?, NOW())");
+    $stmt->execute([$id_usuario, $total_venta]);
+
     $id_venta = $pdo->lastInsertId();
 
-    // 6. INSERTAR el detalle de cada producto
+    // 4. PREPARAR inserción de detalles
     $stmt_detalle = $pdo->prepare("INSERT INTO ventas_detalle 
         (id_venta, id_producto, cantidad, precio_unitario, subtotal) 
         VALUES (?, ?, ?, ?, ?)");
 
-    foreach ($data as $producto) {
-        $id_producto    = (int)$producto['id_producto'];
-        $cantidad       = (int)$producto['cantidad'];
-        $precio_unitario = (float)$producto['precio'];
-        $subtotal       = $cantidad * $precio_unitario;
+    foreach ($data['productos'] as $prod) {
+        // Nota: Asegúrate que tu JS envíe 'id', 'cantidad' y 'precio'
+        $id_prod  = (int)$prod['id'];
+        $cant     = (int)$prod['cantidad'];
+        $precio   = (float)$prod['precio_unitario'];
+        $subtotal = $cant * $precio;
 
-        // Verificar que el producto existe en la BD
+        // Validación rápida de existencia
         $check = $pdo->prepare("SELECT id_producto FROM productos WHERE id_producto = ?");
-        $check->execute([$id_producto]);
+        $check->execute([$id_prod]);
         if (!$check->fetch()) {
-            die("El producto con id $id_producto no existe");
+            throw new Exception("El producto con ID $id_prod no existe en la base de datos.");
         }
 
         $stmt_detalle->execute([
             $id_venta,
-            $id_producto,
-            $cantidad,
-            $precio_unitario,
+            $id_prod,
+            $cant,
+            $precio,
             $subtotal
         ]);
     }
 
+    // Si todo llegó hasta aquí, guardamos los cambios definitivamente
+    $pdo->commit();
+
     echo json_encode([
-        "mensaje" => "Venta guardada correctamente ✅",
-        "id_venta" => $id_venta,
-        "total"    => $total
+        "status" => "success",
+        "mensaje" => "¡Venta de MercaBlue guardada con éxito! ✅",
+        "id_venta" => $id_venta
     ]);
 
-} catch (PDOException $e) {
-    die("Error al guardar la venta: " . $e->getMessage());
+} catch (Exception $e) {
+    // Si algo falla, deshacemos todo lo anterior
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error",
+        "error" => $e->getMessage()
+    ]);
 }
 ?>
