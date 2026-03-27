@@ -24,17 +24,34 @@
             <div class="flex items-center bg-white rounded-full overflow-hidden w-[560px] shadow-md">
                 <select id="filtro-categoria"
                     class="text-gray-500 text-sm px-4 py-2.5 bg-white border-r border-gray-200 outline-none cursor-pointer">
-                    <option value="">Categorías</option>
+                    <option value="">Todos los productos</option>
+                    <option value="alimentos" class="font-bold text-blue-600">Alimentos y Bebidas</option>
+                    <option value="frutas" class="font-bold text-green-600">Frutas y Verduras</option>
+                    <option value="carnes" class="font-bold text-red-600">Carnes y Pescados</option>
+                    <option value="lacteos" class="font-bold text-yellow-600">Lácteos y Huevos</option>
+                    <option disabled>──────────</option>
                     <option value="frutas">Frutas</option>
                     <option value="verduras">Verduras</option>
-                    <option value="lacteos">Lácteos</option>
-                    <option value="bebidas">Bebidas</option>
-                    <option value="carnes">Carnes</option>
+                    <option value="hierbas">Hierbas y Especias</option>
+                    <option value="res">Carnes: Res</option>
+                    <option value="pollo">Carnes: Pollo</option>
+                    <option value="cerdo">Carnes: Cerdo</option>
+                    <option value="pescado">Pescados y Mariscos</option>
+                    <option value="leche">Leche</option>
+                    <option value="queso">Quesos</option>
+                    <option value="huevos">Huevos</option>
+                    <option value="mantequilla">Mantequilla y Cremas</option>
+                    <option value="alimentos-basicos">Alimentos Básicos</option>
+                    <option value="charcuteria">Charcutería</option>
+                    <option value="enlatados">Enlatados</option>
+                    <option value="bebidas-liquidas">Bebidas Líquidas</option>
+                    <option value="bebidas-polvo">Bebidas en Polvo</option>
+                    <option value="helados">Helados</option>
+                    <option value="postres">Postres</option>
                 </select>
                 <input id="input-busqueda" type="text" placeholder="Busca tu producto aquí..."
                     class="flex-1 text-gray-600 text-sm px-4 py-2.5 outline-none">
-                <button id="btn-buscar"
-                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
+                <button id="btn-buscar" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
                     Buscar
                 </button>
             </div>
@@ -135,27 +152,27 @@
             <div class="grid grid-cols-4 gap-6">
 
                 <!-- Tarjeta 1 -->
-                <a href="#"
-                    class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+                <div href="productos.html"
+                    class="producto cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
                     <img src="images/productos/frutas/manzanas/manzanas.png" alt="Manzanas"
                         class="w-full h-48 object-cover">
                     <div class="p-4">
                         <span class="text-xs text-blue-500 font-semibold uppercase">Frutas</span>
-                        <h3 class="text-gray-800 font-bold text-lg mt-1">Manzanas Rojas</h3>
+                        <h3 class="text-gray-800 font-bold text-lg mt-1">Manzanas Rojas Frescas</h3>
                         <p class="text-gray-400 text-sm mb-3">Por kilo — Frescas del día</p>
                         <div class="flex justify-between items-center">
                             <span class="text-blue-600 font-bold text-xl">$3.500</span>
-                            <button onclick="agregarAlCarrito('Manzanas Rojas', 3500)"
+                            <button onclick="agregarAlCarrito('Manzanas Rojas Frescas 1 Kg', 3500)"
                                 class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
                                 + Agregar
                             </button>
                         </div>
                     </div>
-                </a>
+                </div>
 
                 <!-- Tarjeta 2 -->
-                <a href="#"
-                    class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+                <div href="productos.html"
+                    class="producto cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
                     <img src="images/productos/bebidas/lacteos/leche/leche.png" alt="Leche"
                         class="w-full h-48 object-cover">
                     <div class="p-4">
@@ -164,17 +181,17 @@
                         <p class="text-gray-400 text-sm mb-3">1 litro — Marca Premium</p>
                         <div class="flex justify-between items-center">
                             <span class="text-blue-600 font-bold text-xl">$2.800</span>
-                            <button onclick="agregarAlCarrito('Leche Entera', 2800)"
+                            <button onclick="agregarAlCarrito('Leche Entera Larga Vida 1L', 3800)"
                                 class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
                                 + Agregar
                             </button>
                         </div>
                     </div>
-                </a>
+                </div>
 
                 <!-- Tarjeta 3 -->
-                <a href="#"
-                    class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+                <div href="productos.html"
+                    class="producto cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
                     <img src="images/productos/verduras/espinaca/espinaca.png" alt="Verduras"
                         class="w-full h-48 object-cover">
                     <div class="p-4">
@@ -183,17 +200,17 @@
                         <p class="text-gray-400 text-sm mb-3">Bolsa 500g — Orgánica</p>
                         <div class="flex justify-between items-center">
                             <span class="text-blue-600 font-bold text-xl">$1.900</span>
-                            <button onclick="agregarAlCarrito('Espinaca Fresca', 1900)"
+                            <button onclick="agregarAlCarrito('Espinaca Fresca Bolsa 500g', 1900)"
                                 class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
                                 + Agregar
                             </button>
                         </div>
                     </div>
-                </a>
+                </div>
 
                 <!-- Tarjeta 4 -->
-                <a href="#"
-                    class="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
+                <div href="productos.html"
+                    class="producto cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out overflow-hidden border border-gray-100">
                     <img src="images/productos/bebidas/jugos/jugo.png" alt="Bebidas" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <span class="text-xs text-blue-500 font-semibold uppercase">Bebidas</span>
@@ -201,13 +218,13 @@
                         <p class="text-gray-400 text-sm mb-3">1 litro — Sin azúcar</p>
                         <div class="flex justify-between items-center">
                             <span class="text-blue-600 font-bold text-xl">$4.200</span>
-                            <button onclick="agregarAlCarrito('Jugo Natural', 4200)"
+                            <button onclick="agregarAlCarrito('Jugo 1L', 6800)"
                                 class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-full transition">
                                 + Agregar
                             </button>
                         </div>
                     </div>
-                </a>
+                </div>
 
             </div>
         </section>
