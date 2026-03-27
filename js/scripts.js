@@ -652,3 +652,7 @@ function mostrarTodos() {
                 <span class="text-blue-500 font-medium">Todos los Productos</span>
             `;
 }
+function toggleFavorito(btn) {
+    btn.classList.toggle('text-red-400');
+    btn.classList.toggle('text-gray-300');
+}
