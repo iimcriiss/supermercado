@@ -157,7 +157,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `email`, `telefono`, `contraseña`, `id_rol`, `activo`, `fecha_registro`) VALUES
 (1, 'yoiner', 'niño', 'yoineracosta902@gmai.com', '3138741772', '$2y$12$MMo/54fvpehgZuQuGucgf.1FXSf6N9fv83PpLRXmh1k1AfR6S4hm.', 2, 1, '2026-03-27 20:03:15'),
-(2, 'cris', 'sayago', 'cris2@gmail.com', '6075834579', '$2y$12$22tFeaiZv6nhn3mSpiVUOuXWc3AOT7.BegThP413xLY.Do1AzIwPG', 1, 1, '2026-03-27 20:03:47');
+(2, 'cris', 'sayago', 'cris@gmail.com', '6075834579', '$2y$12$22tFeaiZv6nhn3mSpiVUOuXWc3AOT7.BegThP413xLY.Do1AzIwPG', 1, 1, '2026-03-27 20:03:47');
 
 
 -- --------------------------------------------------------
