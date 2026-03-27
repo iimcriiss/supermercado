@@ -114,22 +114,22 @@ function confirmarCompra() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(carrito)
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert('✅ ' + data.message);
-                carrito = [];
-                mostrarCarrito();
-                actualizarContadorNavbar();
-                cerrarCarrito();
-            } else {
-                alert('❌ Error: ' + data.message);
-            }
-        })
-        .catch(err => {
-            console.error('Error en la compra:', err);
-            alert('❌ Hubo un problema al procesar su pedido. Por favor, intente de nuevo.');
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('✅ ' + data.message);
+                    carrito = [];
+                    mostrarCarrito();
+                    actualizarContadorNavbar();
+                    cerrarCarrito();
+                } else {
+                    alert('❌ Error: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Error en la compra:', err);
+                alert('❌ Hubo un problema al procesar su pedido. Por favor, intente de nuevo.');
+            });
     }
 }
 
@@ -169,7 +169,7 @@ function filtrarPrecio(maxPrecio) {
 // ═══════════════════════════════════════
 function validarFormulario(event) {
     if (event) event.preventDefault();
-    
+
     let form = document.getElementById('form-registro');
     let nombre = document.getElementById('nombre').value;
     let email = document.getElementById('email').value;
@@ -194,20 +194,20 @@ function validarFormulario(event) {
         method: 'POST',
         body: formData
     })
-    .then(res => res.text())
-    .then(data => {
-        if (data.includes('correctamente')) {
-            mostrarToast('✅ ' + data);
-            form.reset();
-            mostrarTab('login');
-        } else {
-            mostrarToast('❌ ' + data);
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        mostrarToast('❌ Error al conectar con el servidor');
-    });
+        .then(res => res.text())
+        .then(data => {
+            if (data.includes('correctamente')) {
+                mostrarToast('✅ ' + data);
+                form.reset();
+                mostrarTab('login');
+            } else {
+                mostrarToast('❌ ' + data);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            mostrarToast('❌ Error al conectar con el servidor');
+        });
 
     return true;
 }
@@ -254,10 +254,10 @@ function cerrarLogin() {
 }
 
 function mostrarTab(tab) {
-    const formLogin    = document.getElementById('form-login');
+    const formLogin = document.getElementById('form-login');
     const formRegistro = document.getElementById('form-registro');
-    const tabLogin     = document.getElementById('tab-login');
-    const tabRegistro  = document.getElementById('tab-registro');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegistro = document.getElementById('tab-registro');
 
     if (tab === 'login') {
         formLogin.classList.remove('hidden');
@@ -284,7 +284,7 @@ function mostrarTab(tab) {
 function mostrarMensaje(formulario, tipo, texto) {
     const div = document.getElementById('msg-' + formulario);
     if (!div) return;
-    
+
     div.classList.remove('hidden', 'bg-red-100', 'text-red-600', 'bg-green-100', 'text-green-600');
 
     if (tipo === 'error') {
@@ -306,7 +306,7 @@ function loginExitoso(nombre, rol = 'cliente') {
     // Actualiza el header
     const textoUsuario = document.getElementById('texto-usuario');
     const btnLogin = document.getElementById('btn-login');
-    
+
     if (textoUsuario) textoUsuario.textContent = '¡Hola, ' + nombre + '!';
     if (btnLogin) btnLogin.onclick = confirmarCerrarSesion; // Cambia a logout
 
@@ -343,7 +343,7 @@ function iniciarSesion(event) {
 
     let form = document.getElementById('form-login');
     let email = document.getElementById('login-email').value;
-    let pass  = document.getElementById('login-password').value;
+    let pass = document.getElementById('login-password').value;
 
     if (!email || !pass) {
         mostrarToast('⚠️ Completa todos los campos');
@@ -361,20 +361,20 @@ function iniciarSesion(event) {
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'success') {
-            const nombre = data.message.replace('Bienvenido ', '');
-            mostrarMensaje('login', 'exito', '✅ ' + data.message);
-            loginExitoso(nombre, data.rol);
-        } else {
-            mostrarMensaje('login', 'error', '❌ ' + data.message);
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        mostrarMensaje('login', 'error', '❌ Error de conexión');
-    });
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const nombre = data.message.replace('Bienvenido ', '');
+                mostrarMensaje('login', 'exito', '✅ ' + data.message);
+                loginExitoso(nombre, data.rol);
+            } else {
+                mostrarMensaje('login', 'error', '❌ ' + data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            mostrarMensaje('login', 'error', '❌ Error de conexión');
+        });
 }
 
 function mostrarBotonVentas() {
@@ -419,13 +419,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Sesión Persistente ---
     const nombreGuardado = localStorage.getItem('usuario');
     const rolGuardado = localStorage.getItem('rol');
-    
+
     if (nombreGuardado) {
         const textoUsuario = document.getElementById('texto-usuario');
         const btnLogin = document.getElementById('btn-login');
         if (textoUsuario) textoUsuario.textContent = '¡Hola, ' + nombreGuardado + '!';
         if (btnLogin) btnLogin.onclick = confirmarCerrarSesion;
-        
+
         if (rolGuardado === 'admin') {
             const btnVentas = document.getElementById('btn-ventas');
             if (btnVentas) btnVentas.classList.remove('hidden');
@@ -558,97 +558,97 @@ function enviarSuscripcion() {
 
     mostrarToast('📧 ¡Suscripción exitosa! Revisa tu correo pronto');
 }
-     // ═══════════════════════════════════════
-        // SIDEBAR: toggle categorías
-        // ═══════════════════════════════════════
-        function toggleCategoria(id) {
-            const sub = document.getElementById('sub-' + id);
-            const dot = document.getElementById('dot-' + id);
-            const estaAbierto = !sub.classList.contains('hidden');
+// ═══════════════════════════════════════
+// SIDEBAR: toggle categorías
+// ═══════════════════════════════════════
+function toggleCategoria(id) {
+    const sub = document.getElementById('sub-' + id);
+    const dot = document.getElementById('dot-' + id);
+    const estaAbierto = !sub.classList.contains('hidden');
 
-            // Cerrar todos
-            document.querySelectorAll('[id^="sub-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('[id^="dot-"]').forEach(el => {
-                el.classList.remove('bg-blue-500');
-                el.classList.add('border-gray-300');
-                el.classList.remove('border-blue-500');
-            });
+    // Cerrar todos
+    document.querySelectorAll('[id^="sub-"]').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('[id^="dot-"]').forEach(el => {
+        el.classList.remove('bg-blue-500');
+        el.classList.add('border-gray-300');
+        el.classList.remove('border-blue-500');
+    });
 
-            if (!estaAbierto) {
-                sub.classList.remove('hidden');
-                dot.classList.add('bg-blue-500', 'border-blue-500');
-                dot.classList.remove('border-gray-300');
-            }
-        }
+    if (!estaAbierto) {
+        sub.classList.remove('hidden');
+        dot.classList.add('bg-blue-500', 'border-blue-500');
+        dot.classList.remove('border-gray-300');
+    }
+}
 
-        // ═══════════════════════════════════════
-        // SIDEBAR: filtrar por subcategoría
-        // ═══════════════════════════════════════
-        function filtrarSubcategoria(categoria) {
-            const productos = document.querySelectorAll('.producto');
-            let encontrados = 0;
+// ═══════════════════════════════════════
+// SIDEBAR: filtrar por subcategoría
+// ═══════════════════════════════════════
+function filtrarSubcategoria(categoria) {
+    const productos = document.querySelectorAll('.producto');
+    let encontrados = 0;
 
-            productos.forEach(p => {
-                const cat = p.getAttribute('data-categoria');
-                const visible = cat === categoria;
-                p.style.display = visible ? '' : 'none';
-                if (visible) encontrados++;
-            });
+    productos.forEach(p => {
+        const cat = p.getAttribute('data-categoria');
+        const visible = cat === categoria;
+        p.style.display = visible ? '' : 'none';
+        if (visible) encontrados++;
+    });
 
-            document.getElementById('sin-resultados').classList.toggle('hidden', encontrados > 0);
+    document.getElementById('sin-resultados').classList.toggle('hidden', encontrados > 0);
 
-            // Actualizar título y breadcrumb
-            const nombres = {
-                'alimentos': 'Alimentos',
-                'alimentos-basicos': 'Alimentos Básicos',
-                'cafe-te': 'Café, Té e Infusiones',
-                'cereales': 'Cereales',
-                'charcuteria': 'Charcutería',
-                'enlatados': 'Enlatados',
-                'helados': 'Helados',
-                'postres': 'Postres',
-                'sopas': 'Sopas, Salsas y Aderezos',
-                'yogurt': 'Yogurt',
-                'bebidas': 'Bebidas',
-                'bebidas-liquidas': 'Bebidas Líquidas',
-                'bebidas-polvo': 'Bebidas en Polvo',
-                'frutas': 'Frutas',
-                'verduras': 'Verduras',
-                'hierbas': 'Hierbas y Especias',
-                'res': 'Res',
-                'pollo': 'Pollo',
-                'pescado': 'Pescado y Mariscos',
-                'cerdo': 'Cerdo',
-                'leche': 'Leche',
-                'queso': 'Quesos',
-                'huevos': 'Huevos',
-                'mantequilla': 'Mantequilla y Crema',
-                'detergentes': 'Detergentes',
-                'desinfectantes': 'Desinfectantes',
-                'papel': 'Papel y Servilletas',
-                'higiene': 'Higiene',
-                'cabello': 'Cabello',
-                'skincare': 'Cuidado de la Piel',
-            };
+    // Actualizar título y breadcrumb
+    const nombres = {
+        'alimentos': 'Alimentos',
+        'alimentos-basicos': 'Alimentos Básicos',
+        'cafe-te': 'Café, Té e Infusiones',
+        'cereales': 'Cereales',
+        'charcuteria': 'Charcutería',
+        'enlatados': 'Enlatados',
+        'helados': 'Helados',
+        'postres': 'Postres',
+        'sopas': 'Sopas, Salsas y Aderezos',
+        'yogurt': 'Yogurt',
+        'bebidas': 'Bebidas',
+        'bebidas-liquidas': 'Bebidas Líquidas',
+        'bebidas-polvo': 'Bebidas en Polvo',
+        'frutas': 'Frutas',
+        'verduras': 'Verduras',
+        'hierbas': 'Hierbas y Especias',
+        'res': 'Res',
+        'pollo': 'Pollo',
+        'pescado': 'Pescado y Mariscos',
+        'cerdo': 'Cerdo',
+        'leche': 'Leche',
+        'queso': 'Quesos',
+        'huevos': 'Huevos',
+        'mantequilla': 'Mantequilla y Crema',
+        'detergentes': 'Detergentes',
+        'desinfectantes': 'Desinfectantes',
+        'papel': 'Papel y Servilletas',
+        'higiene': 'Higiene',
+        'cabello': 'Cabello',
+        'skincare': 'Cuidado de la Piel',
+    };
 
-            const nombre = nombres[categoria] || categoria;
-            document.getElementById('titulo-seccion').textContent = nombre;
-            document.getElementById('breadcrumb').innerHTML = `
-                <a href="/index.html" class="hover:text-blue-500 transition">Inicio</a>
+    const nombre = nombres[categoria] || categoria;
+    document.getElementById('titulo-seccion').textContent = nombre;
+    document.getElementById('breadcrumb').innerHTML = `
+                <a href="index.html" class="hover:text-blue-500 transition">Inicio</a>
                 <span class="mx-1">/</span>
                 <span class="hover:text-blue-500 transition cursor-pointer" onclick="mostrarTodos()">Productos</span>
                 <span class="mx-1">/</span>
                 <span class="text-blue-500 font-medium">${nombre}</span>
             `;
-        }
+}
 
-        function mostrarTodos() {
-            document.querySelectorAll('.producto').forEach(p => p.style.display = '');
-            document.getElementById('sin-resultados').classList.add('hidden');
-            document.getElementById('titulo-seccion').textContent = 'Todos los Productos';
-            document.getElementById('breadcrumb').innerHTML = `
-                <a href="/index.html" class="hover:text-blue-500 transition">Inicio</a>
+function mostrarTodos() {
+    document.querySelectorAll('.producto').forEach(p => p.style.display = '');
+    document.getElementById('sin-resultados').classList.add('hidden');
+    document.getElementById('titulo-seccion').textContent = 'Todos los Productos';
+    document.getElementById('breadcrumb').innerHTML = `
+                <a href="index.html" class="hover:text-blue-500 transition">Inicio</a>
                 <span class="mx-1">/</span>
                 <span class="text-blue-500 font-medium">Todos los Productos</span>
             `;
-        }
+}
