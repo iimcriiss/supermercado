@@ -656,3 +656,209 @@ function toggleFavorito(btn) {
     btn.classList.toggle('text-red-400');
     btn.classList.toggle('text-gray-300');
 }
+  // --- Configuración de Paginación y Filtros ---
+        const PRODUCTOS_POR_PAGINA = 12;
+        let paginaActual = 1;
+
+        // Nuevas variables globales para el filtrado por precio
+        let minActual = 0;
+        let maxActual = Infinity;
+
+        /**
+         * Lógica de Filtrado:
+         * Lee el input de búsqueda, el select de categorías y el rango de precio.
+         * Marca productos como visibles y llama a la paginación.
+         */
+        function buscarProductos() {
+            const texto = document.getElementById('input-busqueda').value.toLowerCase().trim();
+            const categoria = document.getElementById('filtro-categoria').value.toLowerCase();
+
+            const productos = document.querySelectorAll('.producto');
+
+            productos.forEach(producto => {
+                const nombre = producto.dataset.nombre.toLowerCase();
+                const cat = producto.dataset.categoria.toLowerCase();
+                const precio = parseFloat(producto.dataset.precio) || 0;
+
+                // Condición 1: Texto
+                const coincideTexto = texto === '' || nombre.includes(texto);
+                
+                // Condición 2: Categoría
+                let coincideCategoria = false;
+                if (categoria === 'categorías' || categoria === '') {
+                    coincideCategoria = true;
+                } else if (categoria === 'carnes') {
+                    coincideCategoria = ['res', 'pollo', 'cerdo', 'pescado'].includes(cat);
+                } else if (categoria === 'frutas') {
+                    coincideCategoria = ['frutas', 'verduras', 'hierbas'].includes(cat);
+                } else if (categoria === 'lacteos') {
+                    coincideCategoria = ['leche', 'queso', 'huevos', 'mantequilla'].includes(cat);
+                } else if (categoria === 'alimentos') {
+                    coincideCategoria = ['alimentos-basicos', 'charcuteria', 'enlatados', 'bebidas-liquidas', 'bebidas-polvo', 'helados', 'postres'].includes(cat);
+                } else {
+                    coincideCategoria = cat === categoria;
+                }
+
+                // Condición 3: Precio
+                const coincidePrecio = precio >= minActual && precio <= maxActual;
+
+                // El producto es visible si cumple las 3 condiciones
+                producto.dataset.visible = (coincideTexto && coincideCategoria && coincidePrecio) ? 'true' : 'false';
+                producto.style.display = 'none'; // Se ocultan todos, renderPaginacion los muestra
+            });
+
+            // Reiniciar a la primera página tras filtrar
+            paginaActual = 1;
+            renderPaginacion();
+        }
+
+        /**
+         * Filtra productos por un rango de precio específico.
+         */
+        function filtrarPorPrecio(min, max, btn) {
+            minActual = min;
+            maxActual = max;
+
+            // Estilos visuales: Marcamos el botón como activo
+            document.querySelectorAll('.precio-btn').forEach(b => {
+                b.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+                b.classList.add('text-gray-600', 'border-gray-200');
+            });
+
+            if (btn) {
+                btn.classList.remove('text-gray-600', 'border-gray-200');
+                btn.classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+            }
+
+            buscarProductos();
+        }
+
+        /**
+         * Resetea el filtro de precio y muestra todos los rangos.
+         */
+        function mostrarTodos() {
+            minActual = 0;
+            maxActual = Infinity;
+
+            document.querySelectorAll('.precio-btn').forEach(b => {
+                b.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+                b.classList.add('text-gray-600', 'border-gray-200');
+            });
+
+            buscarProductos();
+        }
+
+        /**
+         * Genera los botones de página y aplica la visibilidad según el rango actual.
+         */
+        function renderPaginacion() {
+            const productosVisibles = [...document.querySelectorAll('.producto')]
+                .filter(p => p.dataset.visible === 'true');
+
+            const totalPaginas = Math.ceil(productosVisibles.length / PRODUCTOS_POR_PAGINA);
+            const contenedor = document.getElementById('paginacion');
+            contenedor.innerHTML = '';
+
+            // Mostrar mensaje si no hay resultados tras filtrar
+            document.getElementById('sin-resultados').classList.toggle('hidden', productosVisibles.length > 0);
+
+            if (totalPaginas <= 0) return;
+
+            // Calcular rango de productos a mostrar (ej: de 1 a 12, de 13 a 24...)
+            const desde = (paginaActual - 1) * PRODUCTOS_POR_PAGINA;
+            const hasta = desde + PRODUCTOS_POR_PAGINA;
+            
+            productosVisibles.forEach((p, i) => {
+                p.style.display = (i >= desde && i < hasta) ? 'flex' : 'none';
+            });
+
+            // Si solo hay una página, no dibujamos botones
+            if (totalPaginas <= 1) return;
+
+            // --- Botón Anterior ---
+            const btnAnterior = document.createElement('button');
+            btnAnterior.innerHTML = '&laquo;';
+            btnAnterior.className = `w-9 i-9 rounded-full text-sm font-semibold border transition flex items-center justify-center
+                ${paginaActual === 1 ? 'text-gray-300 border-gray-200 cursor-not-allowed' : 'text-gray-600 border-gray-300 hover:bg-blue-50'}`;
+            btnAnterior.disabled = paginaActual === 1;
+            btnAnterior.onclick = () => cambiarPagina(paginaActual - 1);
+            contenedor.appendChild(btnAnterior);
+
+            // --- Números de Página ---
+            for (let i = 1; i <= totalPaginas; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = `w-9 h-9 rounded-full text-sm font-semibold border transition flex items-center justify-center
+                    ${i === paginaActual ? 'bg-blue-500 text-white border-blue-500' : 'text-gray-600 border-gray-300 hover:bg-blue-50'}`;
+                btn.onclick = () => cambiarPagina(i);
+                contenedor.appendChild(btn);
+            }
+
+            // --- Botón Siguiente ---
+            const btnSiguiente = document.createElement('button');
+            btnSiguiente.innerHTML = '&raquo;';
+            btnSiguiente.className = `w-9 h-9 rounded-full text-sm font-semibold border transition flex items-center justify-center
+                ${paginaActual === totalPaginas ? 'text-gray-300 border-gray-200 cursor-not-allowed' : 'text-gray-600 border-gray-300 hover:bg-blue-50'}`;
+            btnSiguiente.disabled = paginaActual === totalPaginas;
+            btnSiguiente.onclick = () => cambiarPagina(paginaActual + 1);
+            contenedor.appendChild(btnSiguiente);
+        }
+
+        /**
+         * Actualiza el estado de la página y hace scroll al inicio suavemente.
+         */
+        function cambiarPagina(pagina) {
+            paginaActual = pagina;
+            renderPaginacion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * Al cargar la página, revisamos si hay parámetros en la URL (?categoria=... o ?busqueda=...)
+         * Esto permite que la búsqueda desde el Home funcione automáticamente al redirigir al catálogo.
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const catUrl = params.get('categoria');
+            const busqUrl = params.get('busqueda');
+            
+            if (catUrl || busqUrl) {
+                if (catUrl) {
+                    const select = document.getElementById('filtro-categoria');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value === catUrl) {
+                                select.value = catUrl;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (busqUrl) {
+                    const input = document.getElementById('input-busqueda');
+                    if (input) {
+                        input.value = decodeURIComponent(busqUrl);
+                    }
+                }
+                
+                buscarProductos();
+            } else {
+                // Si no hay parámetros, igual inicializamos la paginación para ver la primera página
+                buscarProductos();
+            }
+        });
+
+        // Buscar al hacer clic en el botón
+        document.getElementById('btn-buscar').addEventListener('click', buscarProductos);
+
+        // Buscar en tiempo real mientras escribe
+        document.getElementById('input-busqueda').addEventListener('input', buscarProductos);
+
+        // Buscar al presionar Enter
+        document.getElementById('input-busqueda').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') buscarProductos();
+        });
+
+        // Filtrar automáticamente al cambiar categoría
+        document.getElementById('filtro-categoria').addEventListener('change', buscarProductos);
