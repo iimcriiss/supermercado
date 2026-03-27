@@ -17,25 +17,42 @@
         <nav class="bg-blue-500 text-white px-12 py-3 flex justify-between items-center">
 
             <!-- Logo -->
-            <a class="px-14 p-0" href="/index.html">
+            <a class="px-14 p-0" href="index.html">
                 <img src="images/logo.svg" alt="Logo MercaBlue" class="w-40 h-full transform scale-125 origin-left">
             </a>
 
-            <!-- Buscador central -->
+            <!-- Buscador central: Filtra los productos en tiempo real por Nombre y Categoría -->
             <div class="flex items-center bg-white rounded-full overflow-hidden w-[560px] shadow-md">
-                <select
+                <select id="filtro-categoria"
                     class="text-gray-500 text-sm px-4 py-2.5 bg-white border-r border-gray-200 outline-none cursor-pointer">
-                    <option>Categorías</option>
-                    <option>Frutas</option>
-                    <option>Verduras</option>
-                    <option>Lácteos</option>
-                    <option>Bebidas</option>
-                    <option>Carnes</option>
-                    <option>Panadería</option>
+                    <option value="">Categorías</option>
+                    <option value="alimentos" class="font-bold text-blue-600">Alimentos y Bebidas</option>
+                    <option value="frutas" class="font-bold text-green-600">Frutas y Verduras</option>
+                    <option value="carnes" class="font-bold text-red-600">Carnes y Pescados</option>
+                    <option value="lacteos" class="font-bold text-yellow-600">Lácteos y Huevos</option>
+                    <option disabled>──────────</option>
+                    <option value="frutas">Frutas</option>
+                    <option value="verduras">Verduras</option>
+                    <option value="hierbas">Hierbas y Especias</option>
+                    <option value="res">Carnes: Res</option>
+                    <option value="pollo">Carnes: Pollo</option>
+                    <option value="cerdo">Carnes: Cerdo</option>
+                    <option value="pescado">Pescados y Mariscos</option>
+                    <option value="leche">Leche</option>
+                    <option value="queso">Quesos</option>
+                    <option value="huevos">Huevos</option>
+                    <option value="mantequilla">Mantequilla y Cremas</option>
+                    <option value="alimentos-basicos">Alimentos Básicos</option>
+                    <option value="charcuteria">Charcutería</option>
+                    <option value="enlatados">Enlatados</option>
+                    <option value="bebidas-liquidas">Bebidas Líquidas</option>
+                    <option value="bebidas-polvo">Bebidas en Polvo</option>
+                    <option value="helados">Helados</option>
+                    <option value="postres">Postres</option>
                 </select>
-                <input type="text" placeholder="Busca tu producto aquí..."
+                <input id="input-busqueda" type="text" placeholder="Busca tu producto aquí..."
                     class="flex-1 text-gray-600 text-sm px-4 py-2.5 outline-none">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
+                <button id="btn-buscar" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 transition">
                     Buscar
                 </button>
             </div>
@@ -43,7 +60,7 @@
             <!-- Acciones -->
             <div class="flex items-center gap-8">
 
-                <!-- Ventas (Solo admin) -->
+                <!-- Ventas: Visible solo para administradores (se controla desde JS) -->
                 <a id="btn-ventas" href="#" class="hidden flex items-center gap-2 hover:text-blue-200 transition">
                     <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
                         <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
@@ -56,14 +73,16 @@
                     <span class="text-sm font-semibold">Ventas</span>
                 </a>
 
-                <!-- Iniciar sesión -->
-                <a onclick="abrirLogin()" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
+                <!-- Botón de Usuario: 
+                     Si no hay sesión: Abre el modal de Login.
+                     Si hay sesión: Muestra "¡Hola, Nombre!" y permite cerrar sesión. -->
+                <a onclick="abrirLogin()" id="btn-login" class="flex items-center gap-2 hover:text-blue-200 transition cursor-pointer">
                     <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd"
                             d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
                             clip-rule="evenodd" />
                     </svg>
-                    <span class="text-sm font-semibold">Iniciar Sesión</span>
+                    <span id="texto-usuario" class="text-sm font-semibold">Iniciar Sesión</span>
                 </a>
 
                 <!-- Carrito -->
@@ -236,7 +255,7 @@
             <h1 id="titulo-seccion" class="text-2xl font-bold text-gray-800 mb-6">Todos los Productos</h1>
 
             <!-- Grid de productos -->
-            <div id="grid-productos" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div id="contenedor-productos" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
 
                 <!-- Productos -->
                 <!-- ═══════════════════════════════════════════════════ -->
@@ -246,9 +265,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Chuleta de Cerdo" data-categoria="cerdo" data-precio="11500 ">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/cerdo/chuleta1.webp"
-                            alt="Chuleta de Cerdo - Porcicola La Fazenda" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Chuleta de Cerdo\'s 500g', 11500 )"
+                        <img src="images/productos/carnes_y_pescados/cerdo/chuleta1.webp" alt="Chuleta de Cerdo - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Chuleta de Cerdo 500g', 11500 )"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
@@ -274,9 +293,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Costilla de Cerdo" data-categoria="cerdo" data-precio="15900">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/cerdo/cost_cerdo1.webp"
-                            alt="Costilla de Cerdo - Porcicola La Fazenda" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Costilla de Cerdo\'s 500g', 15900)"
+                        <img src="images/productos/carnes_y_pescados/cerdo/cost_cerdo1.webp" alt="Costilla de Cerdo - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Costilla de Cerdo 500g', 15900)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
@@ -302,9 +321,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Tocino para Chicharrón" data-categoria="cerdo" data-precio="13200">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/cerdo/tocino1.webp"
-                            alt="Tocino para Chicharrón - Porcicola La Fazenda" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Tocino para Chicharrón\'s 500g', 13200)"
+                        <img src="images/productos/carnes_y_pescados/cerdo/tocino1.webp" alt="Tocino para Chicharrón - Porcicola La Fazenda"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Tocino para Chicharrón 500g', 13200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
@@ -330,15 +349,13 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Cañón de Cerdo en Medallones" data-categoria="cerdo" data-precio="14500">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/cerdo/canon1.png"
-                            alt="Cañón de Cerdo en Medallones - Porcicola La Fazenda"
+                        <img src="images/productos/carnes_y_pescados/cerdo/canon1.png" alt="Cañón de Cerdo en Medallones - Porcicola La Fazenda"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Cañón de Cerdo en Medallones\'s 500g', 14500)"
+                        <button onclick="agregarAlCarrito('Cañón de Cerdo en Medallones 500g', 14500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5"> Porcicola La Fazenda </p>
-                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Cañón de Cerdo en Medallones 500g
-                    </p>
+                    <p class="text-sm font-semibold text-gray-800 leading-snug mb-1">Cañón de Cerdo en Medallones 500g</p>
                     <p class="text-blue-500 font-bold text-base mt-auto">$14.500</p>
                     <p class="text-xs text-gray-400">Unidades a $14.500</p>
                     <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
@@ -360,9 +377,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Posta de Bagre Rayado" data-categoria="pescado" data-precio="18900">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/pescado_y_mariscos/bagre1.webp"
-                            alt=" Posta de Bagre Rayado Pesquera del Magdalena" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Posta de Bagre Rayado\'s 500g', 18900)"
+                        <img src="images/productos/carnes_y_pescados/pescado_y_mariscos/bagre1.webp" alt=" Posta de Bagre Rayado Pesquera del Magdalena"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Posta de Bagre Rayado 500g', 18900)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5"> Pesquera del Magdalena </p>
@@ -388,9 +405,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Mojarra Roja Entera" data-categoria="pescado" data-precio="12500">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/pescado_y_mariscos/mojarra1.png"
-                            alt=" Mojarra Pesquera del Caribe" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Mojarra Roja Entera\'s 450g', 12500)"
+                        <img src="images/productos/carnes_y_pescados/pescado_y_mariscos/mojarra1.png" alt=" Mojarra Pesquera del Caribe"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Mojarra Roja Entera 450g', 12500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5"> Pesquera del Caribe </p>
@@ -420,7 +437,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/enlatados/atun1.webp" alt="Atún Van Camp's"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Atún en Agua Van Camp\'s 160g', 6500)"
+                        <button onclick="agregarAlCarrito('Atún Lomitos en Agua 160g', 6500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Van Camp's</p>
@@ -445,9 +462,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer "
                     data-nombre="Maiz Dulce" data-categoria="enlatados" data-precio="4200">
                     <div class="relative mb-3">
-                        <img src="images/productos/alimentos_y_bebidas/enlatados/maiz1.jpg" alt="Maíz Dulce Zenú"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Maíz Dulce Zenú Lata 220g', 4200)"
+                        <img src="images/productos/alimentos_y_bebidas/enlatados/maiz1.jpg"
+                            alt="Maíz Dulce Zenú" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Maíz Tierno Dulce Lata 220g', 4200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Zenú</p>
@@ -469,12 +486,12 @@
                     </button>
                 </div>
 
-                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
+                <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer" 
                     data-nombre="Arvejas con Zanahoria" data-categoria="alimentos-basicos" data-precio="3800">
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/enlatados/arverjas1.jpg" alt="Arvejas Fruco"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Arvejas con Zanahoria Fruco 300g', 3800)"
+                        <button onclick="agregarAlCarrito('Arvejas con Zanahoria Lata 300g', 3800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Fruco</p>
@@ -533,9 +550,9 @@
                         class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
                         Corte Fresco</div>
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/res/res1.jpg" alt="Carne Molida"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Carne Molida de Res Primera 500g', 15000)"
+                        <img src="images/productos/carnes_y_pescados/res/res1.jpg"
+                            alt="Carne Molida" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Carne Molida de Res Especial 500g', 15000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
@@ -588,9 +605,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Costilla de Res" data-categoria="res" data-precio="14000">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/res/costilla1.webp" alt="Costilla de Res"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Costilla de Res Especial 500g', 14000)"
+                        <img src="images/productos/carnes_y_pescados/res/costilla1.webp"
+                            alt="Costilla de Res" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Costilla de Res Porcionada 500g', 14000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
@@ -615,9 +632,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Carne para Desmechar" data-categoria="res" data-precio="16500">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/res/desme1.png" alt="Carne Desmechar"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Carne para Desmechar Falda 500g', 16500)"
+                        <img src="images/productos/carnes_y_pescados/res/desme1.png"
+                            alt="Carne Desmechar" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Carne de Res para Desmechar 500g', 16500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
@@ -648,7 +665,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/carnes_y_pescados/pollo/pechuga1.webp" alt="Pechuga de Pollo"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Pechuga de Pollo Fresca 1kg', 18000)"
+                        <button onclick="agregarAlCarrito('Pechuga de Pollo Entera 1 Kg', 18000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
@@ -673,8 +690,8 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Muslos de Pollo" data-categoria="pollo" data-precio="9500">
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/pollo/muslos1.jpg" alt="Muslos de Pollo"
-                            class="w-full h-40 object-contain">
+                        <img src="images/productos/carnes_y_pescados/pollo/muslos1.jpg"
+                            alt="Muslos de Pollo" class="w-full h-40 object-contain">
                         <button onclick="agregarAlCarrito('Muslos de Pollo Bandeja 500g', 9500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
@@ -702,7 +719,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/carnes_y_pescados/pollo/alas1.webp" alt="Alitas de Pollo"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Alitas de Pollo 500g', 11000)"
+                        <button onclick="agregarAlCarrito('Alas de Pollo Especiales 500g', 11000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
@@ -730,9 +747,9 @@
                         class="absolute top-3 left-3 bg-yellow-400 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
                         Familiar</div>
                     <div class="relative mb-3">
-                        <img src="images/productos/carnes_y_pescados/pollo/pollo1.jpg" alt="Pollo Entero"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Pollo Entero Sin Menudencias', 28000)"
+                        <img src="images/productos/carnes_y_pescados/pollo/pollo1.jpg"
+                            alt="Pollo Entero" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Pollo Entero Fresco Sin Menudencias', 28000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Carnicería MercaBlue</p>
@@ -763,7 +780,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/lacteos_y_huevos/huevos/huevosaa1.png" alt="Huevos AA"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Panal Huevos Rojos AA x30', 16500)"
+                        <button onclick="agregarAlCarrito('Panal Huevos Rojos Tamaño AA x 30', 16500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Kikes</p>
@@ -791,7 +808,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/lacteos_y_huevos/huevos/huevosa1.png" alt="Huevos A"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Caja Huevos A x12', 7200)"
+                        <button onclick="agregarAlCarrito('Caja Huevos Rojos Tamaño A x 12', 7200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Kikes</p>
@@ -817,9 +834,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Huevos Codorniz" data-categoria="huevos" data-precio="5500">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/huevos/codorniz1.jpg" alt="Huevos Codorniz"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Huevos de Codorniz x24', 5500)"
+                        <img src="images/productos/lacteos_y_huevos/huevos/codorniz1.jpg"
+                            alt="Huevos Codorniz" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Huevos de Codorniz Frescos x 24', 5500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Granja Local</p>
@@ -848,9 +865,9 @@
                         class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
                         Orgánico</div>
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/huevos/organico1.jpg" alt="Huevos Orgánicos"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Huevos Orgánicos Gallina Libre x12', 12000)"
+                        <img src="images/productos/lacteos_y_huevos/huevos/organico1.jpg"
+                            alt="Huevos Orgánicos" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Huevos Orgánicos Gallina Libre x 12', 12000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Biocampo</p>
@@ -881,7 +898,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/hierbas_y_especias/cilantro1.webp" alt="Cilantro"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Cilantro Fresco Ramo', 1500)"
+                        <button onclick="agregarAlCarrito('Cilantro Fresco Ramo Grande', 1500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
@@ -908,7 +925,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/hierbas_y_especias/ajo1.webp" alt="Ajo"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Ajo Malla x3 Cabezas', 3200)"
+                        <button onclick="agregarAlCarrito('Ajo Blanco Malla x 3 Cabezas', 3200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">A Granel</p>
@@ -935,7 +952,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/hierbas_y_especias/perejil1.webp" alt="Perejil"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Perejil Crespo Ramo', 1500)"
+                        <button onclick="agregarAlCarrito('Perejil Crespo Fresco Ramo', 1500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
@@ -960,9 +977,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Pimienta Negra" data-categoria="hierbas" data-precio="4800">
                     <div class="relative mb-3">
-                        <img src="images/productos/frutas_y_verduras/hierbas_y_especias/negra1.webp"
-                            alt="Pimienta Negra" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Pimienta Negra Molida 50g', 4800)"
+                        <img src="images/productos/frutas_y_verduras/hierbas_y_especias/negra1.webp" alt="Pimienta Negra"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Pimienta Negra Molida Frasco 50g', 4800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">El Rey</p>
@@ -993,7 +1010,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/alimentos_basicos/arroz1.webp" alt="Arroz Diana"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Arroz Blanco 1kg', 3500)"
+                        <button onclick="agregarAlCarrito('Arroz Blanco Premium 1kg', 3500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Diana</p>
@@ -1020,7 +1037,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/alimentos_basicos/aceite1.webp" alt="Aceite"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Aceite  900ml', 12000)"
+                        <button onclick="agregarAlCarrito('Aceite 900ml', 12000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Gourmet</p>
@@ -1047,7 +1064,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/alimentos_basicos/sal1.jpg" alt="Sal"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Sal Refinada 1kg', 1800)"
+                        <button onclick="agregarAlCarrito('Sal Refinada Yodada 1kg', 1800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Refisal</p>
@@ -1074,7 +1091,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/alimentos_basicos/azucar1.jpg" alt="Azúcar"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Azúcar Blanca 1kg', 4200)"
+                        <button onclick="agregarAlCarrito('Azúcar Blanca Especial 1kg', 4200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Incauca</p>
@@ -1104,7 +1121,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/charcuteria/jamon1.png" alt="Jamón"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Jamón de Cerdo 250g', 8500)"
+                        <button onclick="agregarAlCarrito('Jamón de Cerdo Tajado 250g', 8500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Zenú</p>
@@ -1158,7 +1175,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/charcuteria/salami1.jpg" alt="Salami"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Salami Tajado 100g', 9800)"
+                        <button onclick="agregarAlCarrito('Salami Tipo Italiano 100g', 9800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Villar</p>
@@ -1185,7 +1202,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/charcuteria/chorizo1.png" alt="Chorizo"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Chorizo Antioqueño x6', 14500)"
+                        <button onclick="agregarAlCarrito('Chorizo Antioqueño x 6 Unid', 14500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Santa Rosano</p>
@@ -1215,7 +1232,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_liquidas/coca1.webp" alt="Coca Cola"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Coca Cola 1.5 Litros', 4500)"
+                        <button onclick="agregarAlCarrito('Gaseosa Coca Cola 1.5 Litros', 4500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Coca-Cola</p>
@@ -1242,7 +1259,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_liquidas/jugo.png" alt="Jugo"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Jugo1L', 6800)"
+                        <button onclick="agregarAlCarrito('Jugo 1L', 6800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Hit</p>
@@ -1269,7 +1286,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_liquidas/agua1.webp" alt="Agua Mineral"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Agua Mineral 600ml', 2500)"
+                        <button onclick="agregarAlCarrito('Agua Mineral Sin Gas 600ml', 2500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Cristal</p>
@@ -1296,7 +1313,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_liquidas/te1.webp" alt="Té Frío"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Té Frío Limón 400ml', 3800)"
+                        <button onclick="agregarAlCarrito('Té Frío Sabor Limón 400ml', 3800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Lipton</p>
@@ -1324,8 +1341,8 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Mantequilla Sal" data-categoria="mantequilla" data-precio="5500">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/mantequilla_y_cremas/mantequilla1.jpg"
-                            alt="Mantequilla" class="w-full h-40 object-contain">
+                        <img src="images/productos/lacteos_y_huevos/mantequilla_y_cremas/mantequilla1.jpg" alt="Mantequilla"
+                            class="w-full h-40 object-contain">
                         <button onclick="agregarAlCarrito('Mantequilla con Sal 125g', 5500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
@@ -1353,7 +1370,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/lacteos_y_huevos/mantequilla_y_cremas/crema1.webp"
                             alt="Crema de Leche" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Crema de Leche 200ml', 4800)"
+                        <button onclick="agregarAlCarrito('Crema de Leche Bolsa 200ml', 4800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Alquería</p>
@@ -1405,9 +1422,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Suero Costeño" data-categoria="mantequilla" data-precio="6200">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/mantequilla_y_cremas/suero1.webp"
-                            alt="Suero Costeño" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Suero Costeño 250g', 6200)"
+                        <img src="images/productos/lacteos_y_huevos/mantequilla_y_cremas/suero1.webp" alt="Suero Costeño"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Suero Costeño Tradicional 250g', 6200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
@@ -1435,9 +1452,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Helado Vainilla" data-categoria="helados" data-precio="14000">
                     <div class="relative mb-3">
-                        <img src="images/productos/alimentos_y_bebidas/helados/helado1.png" alt="Helado Vainilla"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Helado Vainilla 1L', 14000)"
+                        <img src="images/productos/alimentos_y_bebidas/helados/helado1.png"
+                            alt="Helado Vainilla" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Helado de Vainilla 1000ml', 14000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Crem Helado</p>
@@ -1464,7 +1481,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/helados/paleta1.jpg" alt="Paleta de Agua"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Paleta de Agua Limón', 2000)"
+                        <button onclick="agregarAlCarrito('Paleta de Agua Sabor Limón', 2000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Popsy</p>
@@ -1491,7 +1508,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/helados/copa1.webp" alt="Copa de Helado"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Copa Helado Chocolate', 4500)"
+                        <button onclick="agregarAlCarrito('Copa de Helado Chocolate 150ml', 4500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Crem Helado</p>
@@ -1516,9 +1533,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Helado Brownie" data-categoria="helados" data-precio="16500">
                     <div class="relative mb-3">
-                        <img src="images/productos/alimentos_y_bebidas/postres/brownie1.webp" alt="Helado Brownie"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Helado Vainilla Brownie 1L', 16500)"
+                        <img src="images/productos/alimentos_y_bebidas/postres/brownie1.webp"
+                            alt="Helado Brownie" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Helado Gourmet Vainilla Brownie', 16500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Popsy</p>
@@ -1548,7 +1565,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/helados/gelatina1.png" alt="Gelatina"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Gelatina Roja Vaso', 1500)"
+                        <button onclick="agregarAlCarrito('Gelatina de Fresa en Vaso', 1500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Gelatina Rica</p>
@@ -1575,7 +1592,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/postres/flan1.jpg" alt="Flan"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Flan de Caramelo 120g', 3800)"
+                        <button onclick="agregarAlCarrito('Flan de Caramelo Individual', 3800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Alpina</p>
@@ -1600,9 +1617,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Arroz con Leche" data-categoria="postres" data-precio="4200">
                     <div class="relative mb-3">
-                        <img src="images/productos/alimentos_y_bebidas/postres/arrozleche1.webp" alt="Arroz con Leche"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Arroz con Leche 200g', 4200)"
+                        <img src="images/productos/alimentos_y_bebidas/postres/arrozleche1.webp"
+                            alt="Arroz con Leche" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Arroz con Leche Casero 200g', 4200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Casero</p>
@@ -1629,7 +1646,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/postres/arequipe1.png" alt="Arequipe"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Arequipe Familiar 250g', 5500)"
+                        <button onclick="agregarAlCarrito('Arequipe Tradicional 250g', 5500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Alpina</p>
@@ -1659,7 +1676,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_en_polvo/choco1.webp" alt="Choco Listo"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Choco Listo 500g', 12000)"
+                        <button onclick="agregarAlCarrito('Chocolate en Polvo Fortificado 500g', 12000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Choco Listo</p>
@@ -1685,9 +1702,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Café Instantáneo" data-categoria="bebidas-polvo" data-precio="8500">
                     <div class="relative mb-3">
-                        <img src="images/productos/alimentos_y_bebidas/bebidas_en_polvo/cafe1.webp"
-                            alt="Café Instantáneo" class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Café Instantáneo 170g', 8500)"
+                        <img src="images/productos/alimentos_y_bebidas/bebidas_en_polvo/cafe1.webp" alt="Café Instantáneo"
+                            class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Café Clásico Frasco 170g', 8500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Nescafé</p>
@@ -1714,7 +1731,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_en_polvo/frutino1.webp" alt="Frutiño"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Refresco Frutiño Lulo', 1000)"
+                        <button onclick="agregarAlCarrito('Refresco en Polvo Sabor Lulo', 1000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Frutiño</p>
@@ -1741,7 +1758,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/alimentos_y_bebidas/bebidas_en_polvo/avena1.webp" alt="Avena"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Avena en Polvo 400g', 7500)"
+                        <button onclick="agregarAlCarrito('Avena Molida en Polvo 400g', 7500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Quaker</p>
@@ -1771,7 +1788,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/frutas/manzanas.png" alt="Manzanas"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Manzanas Rojas 1kg', 3500)"
+                        <button onclick="agregarAlCarrito('Manzanas Rojas Frescas 1 Kg', 3500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Frutas Frescas</p>
@@ -1798,7 +1815,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/frutas/bana1.jpg" alt="Bananos"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Bananos 1kg', 2800)"
+                        <button onclick="agregarAlCarrito('Bananos Maduros 1 Kg', 2800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Frutas Frescas</p>
@@ -1825,7 +1842,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/frutas/naranjas1.png" alt="Naranjas"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Naranjas Valencia 1kg', 3200)"
+                        <button onclick="agregarAlCarrito('Naranjas Valencia Jugosas 1 Kg', 3200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Frutas Frescas</p>
@@ -1855,7 +1872,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/frutas/fresas1.webp" alt="Fresas"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Fresas Frescas 500g', 4500)"
+                        <button onclick="agregarAlCarrito('Fresas Frescas de Temporada 500g', 4500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
@@ -1886,7 +1903,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/verduras/tomate1.webp" alt="Tomate"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Tomate Chonto 1kg', 2500)"
+                        <button onclick="agregarAlCarrito('Tomate Chonto Maduro 1 Kg', 2500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Verduras Frescas</p>
@@ -1913,7 +1930,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/verduras/papa1.webp" alt="Papa"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Papa Pastusa 2kg', 3000)"
+                        <button onclick="agregarAlCarrito('Papa Pastusa Seleccionada 2 Kg', 3000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Verduras Frescas</p>
@@ -1940,7 +1957,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/verduras/cebolla1.webp" alt="Cebolla"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Cebolla Cabezona 1kg', 2200)"
+                        <button onclick="agregarAlCarrito('Cebolla Cabezona Blanca 1 Kg', 2200)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Verduras Frescas</p>
@@ -1970,7 +1987,7 @@
                     <div class="relative mb-3">
                         <img src="images/productos/frutas_y_verduras/verduras/espinaca.png" alt="Espinaca"
                             class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Espinaca Fresca 500g', 1900)"
+                        <button onclick="agregarAlCarrito('Espinaca Fresca Bolsa 500g', 1900)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Huerta Local</p>
@@ -1998,9 +2015,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Leche Entera Alquería" data-categoria="leche" data-precio="3800">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/leche/leche1.png" alt="Leche Entera"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Leche Entera Alquería 1L', 3800)"
+                        <img src="images/productos/lacteos_y_huevos/leche/leche1.png"
+                            alt="Leche Entera" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Leche Entera Larga Vida 1L', 3800)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Alquería</p>
@@ -2025,9 +2042,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Leche Descremada" data-categoria="leche" data-precio="4000">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/leche/descre1.png" alt="Leche Descremada"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Leche Descremada 1L', 4000)"
+                        <img src="images/productos/lacteos_y_huevos/leche/descre1.png"
+                            alt="Leche Descremada" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Leche Descremada Deslactosada 1L', 4000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
@@ -2053,9 +2070,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Leche en Polvo" data-categoria="leche" data-precio="18500">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/leche/polvo1.jpg" alt="Leche en Polvo"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Leche en Polvo 400g', 18500)"
+                        <img src="images/productos/lacteos_y_huevos/leche/polvo1.jpg"
+                            alt="Leche en Polvo" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Leche en Polvo Entera 400g', 18500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Klim</p>
@@ -2083,9 +2100,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Queso Campesino" data-categoria="queso" data-precio="9500">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/quesos/campe1.jpg" alt="Queso Campesino"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Queso Campesino 250g', 9500)"
+                        <img src="images/productos/lacteos_y_huevos/quesos/campe1.jpg"
+                            alt="Queso Campesino" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Queso Campesino Fresco 250g', 9500)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
@@ -2110,9 +2127,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Queso Mozarella" data-categoria="queso" data-precio="14000">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/quesos/mozza1.png" alt="Queso Mozarella"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Queso Mozarella 250g', 14000)"
+                        <img src="images/productos/lacteos_y_huevos/quesos/mozza1.png"
+                            alt="Queso Mozarella" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Queso Mozarella Rallado 250g', 14000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Alpina</p>
@@ -2137,9 +2154,9 @@
                 <div class="producto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col relative cursor-pointer"
                     data-nombre="Queso Doble Crema" data-categoria="queso" data-precio="11000">
                     <div class="relative mb-3">
-                        <img src="images/productos/lacteos_y_huevos/quesos/doble1.jpeg" alt="Queso Doble Crema"
-                            class="w-full h-40 object-contain">
-                        <button onclick="agregarAlCarrito('Queso Doble Crema 250g', 11000)"
+                        <img src="images/productos/lacteos_y_huevos/quesos/doble1.jpeg"
+                            alt="Queso Doble Crema" class="w-full h-40 object-contain">
+                        <button onclick="agregarAlCarrito('Queso Doble Crema Tajado 250g', 11000)"
                             class="btn-agregar absolute top-1 right-1 w-9 h-9 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md text-xl font-bold">+</button>
                     </div>
                     <p class="text-xs text-gray-400 mb-0.5">Colanta</p>
@@ -2173,127 +2190,12 @@
                 <p class="text-sm mt-1">No hay productos en esta categoría aún.</p>
             </div>
 
-            <!-- Paginación -->
+            <!-- Contenedor de Paginación: Aparece si hay más de 12 productos -->
             <div id="paginacion" class="flex items-center justify-center gap-2 mt-8 mb-4">
-                <!-- Se genera con JS -->
+                <!-- Se genera dinámicamente con JavaScript -->
             </div>
-
         </main>
     </div>
-
-    <footer class="bg-gray-900 text-white pt-16 pb-8 px-20">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div class="space-y-4">
-                <img src="images/logo.svg" alt="Logo MercaBlue" class="w-46 brightness-0 invert" />
-                <p class="text-gray-400 text-sm leading-relaxed">
-                    Llevamos la frescura del campo directamente a tu mesa. Calidad
-                    garantizada en cada producto y entrega rápida en la puerta de tu
-                    hogar.
-                </p>
-                <div class="flex gap-4">
-                    <a href="#" class="bg-gray-800 p-2 rounded-full hover:bg-blue-500 transition shadow-sm">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                    </a>
-                    <a href="#" class="bg-gray-800 p-2 rounded-full hover:bg-pink-500 transition shadow-sm">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            <div class="flex flex-col space-y-4">
-                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
-                    Compañía
-                </h4>
-                <ul class="space-y-2 text-gray-400 text-sm">
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Sobre nosotros</a>
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Nuestras tiendas</a>
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Trabaja con nosotros</a>
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Blog de cocina</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="flex flex-col space-y-4">
-                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
-                    Soporte
-                </h4>
-                <ul class="space-y-2 text-gray-400 text-sm">
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Centro de ayuda</a>
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Políticas de envío</a>
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Términos y condiciones</a>
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-blue-400 transition">Preguntas frecuentes</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="space-y-4">
-                <h4 class="text-lg font-bold border-l-4 border-blue-500 pl-3">
-                    Suscríbete
-                </h4>
-                <p class="text-gray-400 text-sm">
-                    Recibe las mejores ofertas semanales en tu correo.
-                </p>
-                <form class="flex flex-col gap-2">
-                    <input type="email" placeholder="tu@email.com"
-                        class="bg-gray-800 border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-                    <button
-                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 rounded-lg transition">
-                        Unirse
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div
-            class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-xs">
-            <p>&copy; 2024 MercaBlue Supermercados S.A. Todos los derechos reservados.</p>
-
-            <div class="flex items-center gap-3">
-                <span class="text-gray-600 text-xs mr-1">Métodos de pago:</span>
-
-                <!-- Visa -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Visa_Inc._logo_%282014%E2%80%932021%29.svg/1280px-Visa_Inc._logo_%282014%E2%80%932021%29.svg.png"
-                    alt="Visa" class="h-5 opacity-60 hover:opacity-100 transition">
-
-                <!-- Mastercard -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard"
-                    class="h-5 opacity-60 hover:opacity-100 transition">
-
-                <!-- Nequi -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/NEQUI.jpg" alt="Nequi"
-                    class="h-5 opacity-60 hover:opacity-100 transition">
-
-                <!-- Bancolombia -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/Logo_Bancolombia2.png" alt="Bancolombia"
-                    class="h-5 opacity-60 hover:opacity-100 transition">
-
-                <!-- PSE -->
-                <img src="https://www.cootransmede.com/wp-content/uploads/2022/02/logo-pse-300x300-1.png" alt="PSE"
-                    class="h-5 opacity-60 hover:opacity-100 transition">
-
-            </div>
-        </div>
-    </footer>
 
     <!-- PANEL LATERAL DEL CARRITO -->
     <div id="panel-carrito"
@@ -2365,23 +2267,22 @@
             <div class="px-8 py-6">
 
                 <!-- FORMULARIO LOGIN -->
-                <div id="form-login">
+                <form id="form-login" action="php/login.php" method="POST">
                     <div class="space-y-4">
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
-                            <input type="email" id="login-email" placeholder="tu@email.com"
+                            <input type="email" id="login-email" name="email" placeholder="tu@email.com" required
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Contraseña</label>
-                            <input type="password" id="login-password" placeholder="••••••••"
+                            <input type="password" id="login-password" name="password" placeholder="••••••••" required
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
-
-                        <!-- MENSAJE LOGIN -->
+                        <!-- Contenedor para mensajes de error o éxito del Login -->
                         <div id="msg-login" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
 
-                        <button onclick="iniciarSesion()"
+                        <button type="submit"
                             class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition mt-2">
                             Iniciar Sesión
                         </button>
@@ -2393,44 +2294,42 @@
                             </span>
                         </p>
                     </div>
-                </div>
+                </form>
 
                 <!-- FORMULARIO REGISTRO -->
-                <div id="form-registro" class="hidden">
+                <form id="form-registro" action="php/registro.php" method="POST" class="hidden">
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="text-gray-600 text-sm font-medium">Nombre</label>
-                                <input type="text" id="nombre" placeholder="Juan"
+                                <input type="text" id="nombre" name="nombre" placeholder="Juan" required
                                     class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                             </div>
                             <div>
                                 <label class="text-gray-600 text-sm font-medium">Apellido</label>
-                                <input type="text" id="apellido" placeholder="Pérez"
+                                <input type="text" id="apellido" name="apellido" placeholder="Pérez" required
                                     class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                             </div>
                         </div>
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Correo electrónico</label>
-                            <input type="email" id="email" placeholder="tu@email.com"
+                            <input type="email" id="email" name="email" placeholder="tu@email.com" required
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Teléfono</label>
-                            <input type="tel" id="telefono" placeholder="300 000 0000"
+                            <input type="tel" id="telefono" name="telefono" placeholder="300 000 0000"
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
                         <div>
                             <label class="text-gray-600 text-sm font-medium">Contraseña</label>
-                            <input type="password" id="password" placeholder="Mínimo 6 caracteres"
+                            <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required
                                 class="w-full mt-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-400">
                         </div>
+                        <!-- Contenedor para mensajes de error o éxito del Registro -->
+                        <div id="msg-registro" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl"></div>
 
-                        <!-- MENSAJE REGISTRO -->
-                        <div id="msg-registro" class="hidden text-sm text-center font-medium py-2 px-4 rounded-xl">
-                        </div>
-
-                        <button onclick="validarFormulario()"
+                        <button type="submit"
                             class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-full transition">
                             Crear Cuenta
                         </button>
@@ -2442,12 +2341,220 @@
                             </span>
                         </p>
                     </div>
-                </div>
+                </form>
 
             </div>
         </div>
     </div>
     <script src="js/scripts.js"></script>
+    <script>
+        // --- Configuración de Paginación y Filtros ---
+        const PRODUCTOS_POR_PAGINA = 12;
+        let paginaActual = 1;
+
+        // Nuevas variables globales para el filtrado por precio
+        let minActual = 0;
+        let maxActual = Infinity;
+
+        /**
+         * Lógica de Filtrado:
+         * Lee el input de búsqueda, el select de categorías y el rango de precio.
+         * Marca productos como visibles y llama a la paginación.
+         */
+        function buscarProductos() {
+            const texto = document.getElementById('input-busqueda').value.toLowerCase().trim();
+            const categoria = document.getElementById('filtro-categoria').value.toLowerCase();
+
+            const productos = document.querySelectorAll('.producto');
+
+            productos.forEach(producto => {
+                const nombre = producto.dataset.nombre.toLowerCase();
+                const cat = producto.dataset.categoria.toLowerCase();
+                const precio = parseFloat(producto.dataset.precio) || 0;
+
+                // Condición 1: Texto
+                const coincideTexto = texto === '' || nombre.includes(texto);
+                
+                // Condición 2: Categoría
+                let coincideCategoria = false;
+                if (categoria === 'categorías' || categoria === '') {
+                    coincideCategoria = true;
+                } else if (categoria === 'carnes') {
+                    coincideCategoria = ['res', 'pollo', 'cerdo', 'pescado'].includes(cat);
+                } else if (categoria === 'frutas') {
+                    coincideCategoria = ['frutas', 'verduras', 'hierbas'].includes(cat);
+                } else if (categoria === 'lacteos') {
+                    coincideCategoria = ['leche', 'queso', 'huevos', 'mantequilla'].includes(cat);
+                } else if (categoria === 'alimentos') {
+                    coincideCategoria = ['alimentos-basicos', 'charcuteria', 'enlatados', 'bebidas-liquidas', 'bebidas-polvo', 'helados', 'postres'].includes(cat);
+                } else {
+                    coincideCategoria = cat === categoria;
+                }
+
+                // Condición 3: Precio
+                const coincidePrecio = precio >= minActual && precio <= maxActual;
+
+                // El producto es visible si cumple las 3 condiciones
+                producto.dataset.visible = (coincideTexto && coincideCategoria && coincidePrecio) ? 'true' : 'false';
+                producto.style.display = 'none'; // Se ocultan todos, renderPaginacion los muestra
+            });
+
+            // Reiniciar a la primera página tras filtrar
+            paginaActual = 1;
+            renderPaginacion();
+        }
+
+        /**
+         * Filtra productos por un rango de precio específico.
+         */
+        function filtrarPorPrecio(min, max, btn) {
+            minActual = min;
+            maxActual = max;
+
+            // Estilos visuales: Marcamos el botón como activo
+            document.querySelectorAll('.precio-btn').forEach(b => {
+                b.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+                b.classList.add('text-gray-600', 'border-gray-200');
+            });
+
+            if (btn) {
+                btn.classList.remove('text-gray-600', 'border-gray-200');
+                btn.classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+            }
+
+            buscarProductos();
+        }
+
+        /**
+         * Resetea el filtro de precio y muestra todos los rangos.
+         */
+        function mostrarTodos() {
+            minActual = 0;
+            maxActual = Infinity;
+
+            document.querySelectorAll('.precio-btn').forEach(b => {
+                b.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+                b.classList.add('text-gray-600', 'border-gray-200');
+            });
+
+            buscarProductos();
+        }
+
+        /**
+         * Genera los botones de página y aplica la visibilidad según el rango actual.
+         */
+        function renderPaginacion() {
+            const productosVisibles = [...document.querySelectorAll('.producto')]
+                .filter(p => p.dataset.visible === 'true');
+
+            const totalPaginas = Math.ceil(productosVisibles.length / PRODUCTOS_POR_PAGINA);
+            const contenedor = document.getElementById('paginacion');
+            contenedor.innerHTML = '';
+
+            // Mostrar mensaje si no hay resultados tras filtrar
+            document.getElementById('sin-resultados').classList.toggle('hidden', productosVisibles.length > 0);
+
+            if (totalPaginas <= 0) return;
+
+            // Calcular rango de productos a mostrar (ej: de 1 a 12, de 13 a 24...)
+            const desde = (paginaActual - 1) * PRODUCTOS_POR_PAGINA;
+            const hasta = desde + PRODUCTOS_POR_PAGINA;
+            
+            productosVisibles.forEach((p, i) => {
+                p.style.display = (i >= desde && i < hasta) ? 'flex' : 'none';
+            });
+
+            // Si solo hay una página, no dibujamos botones
+            if (totalPaginas <= 1) return;
+
+            // --- Botón Anterior ---
+            const btnAnterior = document.createElement('button');
+            btnAnterior.innerHTML = '&laquo;';
+            btnAnterior.className = `w-9 i-9 rounded-full text-sm font-semibold border transition flex items-center justify-center
+                ${paginaActual === 1 ? 'text-gray-300 border-gray-200 cursor-not-allowed' : 'text-gray-600 border-gray-300 hover:bg-blue-50'}`;
+            btnAnterior.disabled = paginaActual === 1;
+            btnAnterior.onclick = () => cambiarPagina(paginaActual - 1);
+            contenedor.appendChild(btnAnterior);
+
+            // --- Números de Página ---
+            for (let i = 1; i <= totalPaginas; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = `w-9 h-9 rounded-full text-sm font-semibold border transition flex items-center justify-center
+                    ${i === paginaActual ? 'bg-blue-500 text-white border-blue-500' : 'text-gray-600 border-gray-300 hover:bg-blue-50'}`;
+                btn.onclick = () => cambiarPagina(i);
+                contenedor.appendChild(btn);
+            }
+
+            // --- Botón Siguiente ---
+            const btnSiguiente = document.createElement('button');
+            btnSiguiente.innerHTML = '&raquo;';
+            btnSiguiente.className = `w-9 h-9 rounded-full text-sm font-semibold border transition flex items-center justify-center
+                ${paginaActual === totalPaginas ? 'text-gray-300 border-gray-200 cursor-not-allowed' : 'text-gray-600 border-gray-300 hover:bg-blue-50'}`;
+            btnSiguiente.disabled = paginaActual === totalPaginas;
+            btnSiguiente.onclick = () => cambiarPagina(paginaActual + 1);
+            contenedor.appendChild(btnSiguiente);
+        }
+
+        /**
+         * Actualiza el estado de la página y hace scroll al inicio suavemente.
+         */
+        function cambiarPagina(pagina) {
+            paginaActual = pagina;
+            renderPaginacion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * Al cargar la página, revisamos si hay parámetros en la URL (?categoria=... o ?busqueda=...)
+         * Esto permite que la búsqueda desde el Home funcione automáticamente al redirigir al catálogo.
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const catUrl = params.get('categoria');
+            const busqUrl = params.get('busqueda');
+            
+            if (catUrl || busqUrl) {
+                if (catUrl) {
+                    const select = document.getElementById('filtro-categoria');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value === catUrl) {
+                                select.value = catUrl;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (busqUrl) {
+                    const input = document.getElementById('input-busqueda');
+                    if (input) {
+                        input.value = decodeURIComponent(busqUrl);
+                    }
+                }
+                
+                buscarProductos();
+            } else {
+                // Si no hay parámetros, igual inicializamos la paginación para ver la primera página
+                buscarProductos();
+            }
+        });
+
+        // Buscar al hacer clic en el botón
+        document.getElementById('btn-buscar').addEventListener('click', buscarProductos);
+
+        // Buscar en tiempo real mientras escribe
+        document.getElementById('input-busqueda').addEventListener('input', buscarProductos);
+
+        // Buscar al presionar Enter
+        document.getElementById('input-busqueda').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') buscarProductos();
+        });
+
+        // Filtrar automáticamente al cambiar categoría
+        document.getElementById('filtro-categoria').addEventListener('change', buscarProductos);
+    </script>
 </body>
 
 </html>
