@@ -25,8 +25,7 @@ MercaBlue es un sistema de comercio electrónico para supermercado que permite a
 | Integrante | Rol | Tecnologías |
 |------------|-----|-------------|
 | **Cris** | Frontend Designer | HTML, Tailwind CSS, JavaScript |
-| **Nicolás** | Backend Developer | PHP, lógica del servidor |
-| **Yoiner** | DBA / Base de datos | MySQL, administración de BD |
+| **Yoiner** | DBA / Base de datos / Backend Developer | MySQL, administración de BD y PHP, lógica del servidor |
 
 ---
 
@@ -102,8 +101,7 @@ C:\laragon\www\supermercado\
 |------|-------------|-----------|
 | `main` | Todos | Rama principal (producción) |
 | `frontend` | Cris | HTML, CSS, JavaScript |
-| `backend` | Nicolás | PHP |
-| `database` | Yoiner | SQL, base de datos |
+| `database y backend` | Yoiner | SQL, PHP y base de datos |
 
 ### Flujo recomendado
 
