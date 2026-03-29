@@ -155,3 +155,28 @@ git push origin frontend
 **MercaBlue** · Proyecto Académico · 2024–2025
 
 </div>
+<img width="1902" height="871" alt="Captura de pantalla 2026-03-29 194824" src="https://github.com/user-attachments/assets/f40a1186-6fc7-4e42-b401-ffb34f7067f8" />
+
+<img width="1899" height="867" alt="Captura de pantalla 2026-03-29 194842" src="https://github.com/user-attachments/assets/3adbd8f3-d188-4602-8781-77564f431fbe" />
+
+<img width="1899" height="873" alt="Captura de pantalla 2026-03-29 194902" src="https://github.com/user-attachments/assets/ddf2934c-1c39-45d0-b06f-064bebef43e2" />
+
+<img width="1898" height="872" alt="Captura de pantalla 2026-03-29 194916" src="https://github.com/user-attachments/assets/73d9225c-95c3-488a-8103-1a6771ec0617" />
+
+<img width="1899" height="871" alt="Captura de pantalla 2026-03-29 194934" src="https://github.com/user-attachments/assets/c9e4ad03-a0ee-4570-b0a5-04aeb4824a9c" />
+
+<img width="1900" height="870" alt="Captura de pantalla 2026-03-29 194951" src="https://github.com/user-attachments/assets/b96d993b-8d7a-4284-b5fa-980325af4f1a" />
+
+<img width="1900" height="872" alt="Captura de pantalla 2026-03-29 195010" src="https://github.com/user-attachments/assets/70dc230b-de40-4dd9-8d3f-f1f974727d6b" />
+
+<img width="1894" height="872" alt="Captura de pantalla 2026-03-29 195025" src="https://github.com/user-attachments/assets/3534d85f-4049-47f2-a276-8f296dfe31af" />
+
+<img width="1894" height="875" alt="Captura de pantalla 2026-03-29 195052" src="https://github.com/user-attachments/assets/7df5f964-5c85-4d99-ab30-20b2488b9345" />
+
+
+
+
+
+
+
+
