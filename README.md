@@ -153,6 +153,7 @@ git push origin frontend
 <div align="center">
 
 **MercaBlue** · Proyecto Académico · 2024–2025
+https://mercablue.page.gd/
 
 </div>
 <img width="1902" height="871" alt="Captura de pantalla 2026-03-29 194824" src="https://github.com/user-attachments/assets/f40a1186-6fc7-4e42-b401-ffb34f7067f8" />
